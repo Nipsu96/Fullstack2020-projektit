@@ -3,7 +3,19 @@
 }
 
 body{
-   background-image: url(./img/cute_panda.jpg);
+   background-image:url(./img/cute_panda.jpg);
+}
+
+button{
+    width: 7em;
+    height: 2em;
+    margin-left: 150px;
+    background-color: #e6ccff;
+    border:1px solid grey;
+    border-radius: 5px;
+}
+p{
+  font-weight: 600;
 }
 
 .Whole{
