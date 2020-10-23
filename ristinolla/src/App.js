@@ -6,18 +6,18 @@ import './App.css';
 function App() {
    //array destructuring
    const [player,setPlayer] = useState("X")
-   const [Value,setValue] = useState("")
-   const [Value2,setValue2] = useState("")
-   const [Value3,setValue3] = useState("")
-   const [Value4,setValue4] = useState("")
-   const [Value5,setValue5] = useState("")
-   const [Value6,setValue6] = useState("")
-   const [Value7,setValue7] = useState("")
-   const [Value8,setValue8] = useState("")
-   const [Value9,setValue9] = useState("")
+   const [value,setValue] = useState("")
+   const [value2,setValue2] = useState("")
+   const [value3,setValue3] = useState("")
+   const [value4,setValue4] = useState("")
+   const [value5,setValue5] = useState("")
+   const [value6,setValue6] = useState("")
+   const [value7,setValue7] = useState("")
+   const [value8,setValue8] = useState("")
+   const [value9,setValue9] = useState("")
 
    const ylavasen = () =>{
-     if(Value === ""){
+     if(value === ""){
         if(player === "X"){
           setValue("X");
         }else{
@@ -32,23 +32,23 @@ function App() {
      }else{
       alert("Ruutu on jo käytössä!")
      }
-     if(Value2==="X"&& Value3==="X"&& player==="X"){
+     if(value2==="X"&& value3==="X"&& player==="X"){
       alert("Voitto!")
-    }else if(Value4==="X"&& Value7==="X"&& player==="X"){
+    }else if(value4==="X"&& value7==="X"&& player==="X"){
      alert("Voitto!")
-   }else if(Value5==="X"&& Value9==="X"&& player==="X"){
+   }else if(value5==="X"&& value9==="X"&& player==="X"){
      alert("Voitto!")
    }
-   if(Value2==="O"&& Value3==="O"&& player==="O"){
+   if(value2==="O"&& value3==="O"&& player==="O"){
      alert("Voitto!")
-   }else if(Value4==="O"&&Value7==="O"&& player==="O"){
+   }else if(value4==="O"&&value7==="O"&& player==="O"){
     alert("Voitto!")
-  }else if(Value5==="O"&& Value9==="O"&& player==="O"){
+  }else if(value5==="O"&& value9==="O"&& player==="O"){
     alert("Voitto!")
   }
    }
    const ylakeski = () =>{
-    if(Value2=== ""){
+    if(value2=== ""){
       if(player === "X"){
         setValue2("X");
       }else{
@@ -63,21 +63,21 @@ function App() {
    }else{
     alert("Ruutu on jo käytössä!")
    }
-   if(Value==="X"&& Value3==="X"&& player==="X"){
+   if(value==="X"&& value3==="X"&& player==="X"){
     alert("Voitto!")
-  }else if(Value5==="X"&&Value9==="X"&& player==="X"){
+  }else if(value5==="X"&&value9==="X"&& player==="X"){
    alert("Voitto!")
  }
- if(Value==="O"&& Value3==="O"&& player==="O"){
+ if(value==="O"&& value3==="O"&& player==="O"){
    alert("Voitto!")
- }else if(Value5==="O"&& Value9==="O"&& player==="O"){
+ }else if(value5==="O"&& value9==="O"&& player==="O"){
   alert("Voitto!")
 }
    }
 
   
   const ylaoikea = () =>{
-    if(Value3=== ""){
+    if(value3=== ""){
       if(player === "X"){
         setValue3("X");
       }else{
@@ -92,23 +92,23 @@ function App() {
    }else{
     alert("Ruutu on jo käytössä!")
    }
-   if(Value==="X"&& Value2==="X"&& player==="X"){
+   if(value==="X"&& value2==="X"&& player==="X"){
     alert("Voitto!")
-  }else if(Value5==="X"&& Value7==="X" && player==="X"){
+  }else if(value5==="X"&& value7==="X" && player==="X"){
    alert("Voitto!")
- }else if(Value6==="X"&& Value9==="X"&& player==="X"){
+ }else if(value6==="X"&& value9==="X"&& player==="X"){
    alert("Voitto!")
  }
- if(Value==="O"&& Value2==="O"&& player==="O"){
+ if(value==="O"&& value2==="O"&& player==="O"){
    alert("Voitto!")
- }else if(Value5==="O"&& Value7==="O"&& player==="O"){
+ }else if(value5==="O"&& value7==="O"&& player==="O"){
   alert("Voitto!")
-}else if(Value6==="O"&& Value9==="O"&& player==="O"){
+}else if(value6==="O"&& value9==="O"&& player==="O"){
   alert("Voitto!")
 }
   }
   const keskivasen = () =>{
-    if(Value4=== ""){
+    if(value4=== ""){
       if(player === "X"){
         setValue4("X");
       }else{
@@ -123,19 +123,19 @@ function App() {
    }else{
     alert("Ruutu on jo käytössä!")
    }
-   if(Value==="X"&&Value7==="X"&& player==="X"){
+   if(value==="X"&&value7==="X"&& player==="X"){
     alert("Voitto!")
-  }else if(Value5==="X"&& Value6==="X"&& player==="X"){
+  }else if(value5==="X"&& value6==="X"&& player==="X"){
    alert("Voitto!")
   }
- if(Value==="O"&&Value7==="O"&& player==="O"){
+ if(value==="O"&&value7==="O"&& player==="O"){
    alert("Voitto!")
- }else if(Value5==="O"&&Value6==="O"&& player==="O"){
+ }else if(value5==="O"&&value6==="O"&& player==="O"){
   alert("Voitto!")
 }
   }
   const keskikeski = () =>{
-    if(Value5=== ""){
+    if(value5=== ""){
       if(player === "X"){
         setValue5("X");
       }else{
@@ -149,27 +149,27 @@ function App() {
    }else{
     alert("Ruutu on jo käytössä!")
    }
-   if(Value2==="X"&&Value8==="X"&& player==="X"){
+   if(value2==="X"&&value8==="X"&& player==="X"){
     alert("Voitto!")
-  }else if(Value4==="X"&&Value6==="X"&& player==="X"){
+  }else if(value4==="X"&&value6==="X"&& player==="X"){
    alert("Voitto!")
- }else if(Value==="X"&&Value9==="X"&& player==="X"){
+ }else if(value==="X"&&value9==="X"&& player==="X"){
    alert("Voitto!")
- }else if(Value3==="X"&&Value7==="X"&& player==="X"){
+ }else if(value3==="X"&&value7==="X"&& player==="X"){
   alert("Voitto!")
 }
-if(Value2==="O"&&Value8==="O"&& player==="O"){
+if(value2==="O"&&value8==="O"&& player==="O"){
   alert("Voitto!")
-}else if(Value4==="O"&&Value6==="O"&& player==="O"){
+}else if(value4==="O"&&value6==="O"&& player==="O"){
  alert("Voitto!")
-}else if(Value==="O"&&Value9==="O"&& player==="O"){
+}else if(value==="O"&&value9==="O"&& player==="O"){
  alert("Voitto!")
-}else if(Value3==="O"&&Value7==="O"&& player==="O"){
+}else if(value3==="O"&&value7==="O"&& player==="O"){
 alert("Voitto!")
 }
   }
   const keskioikea = () =>{
-    if(Value6=== ""){
+    if(value6=== ""){
       if(player === "X"){
         setValue6("X");
       }else{
@@ -184,19 +184,19 @@ alert("Voitto!")
    }else{
     alert("Ruutu on jo käytössä!")
    }
-   if(Value9==="X"&&Value3==="X"&& player==="X"){
+   if(value9==="X"&&value3==="X"&& player==="X"){
     alert("Voitto!")
-  }else if(Value4==="X"&&Value5==="X"&& player==="X"){
+  }else if(value4==="X"&&value5==="X"&& player==="X"){
    alert("Voitto!")
  }
- if(Value9==="O"&&Value3==="O"&& player==="O"){
+ if(value9==="O"&&value3==="O"&& player==="O"){
    alert("Voitto!")
- }else if(Value4==="O"&&Value5==="O"&& player==="O"){
+ }else if(value4==="O"&&value5==="O"&& player==="O"){
   alert("Voitto!")
 }
   }
   const alavasen = () =>{
-    if(Value7=== ""){
+    if(value7=== ""){
       if(player === "X"){
         setValue7("X");
       }else{
@@ -211,23 +211,23 @@ alert("Voitto!")
    }else{
     alert("Ruutu on jo käytössä!")
    }
-   if(Value4==="X"&&Value==="X"&& player==="X"){
+   if(value4==="X"&&value==="X"&& player==="X"){
     alert("Voitto!")
-  }else if(Value5==="X"&&Value3==="X"&& player==="X"){
+  }else if(value5==="X"&&value3==="X"&& player==="X"){
    alert("Voitto!")
- }else if(Value8==="X"&&Value9==="X"&& player==="X"){
+ }else if(value8==="X"&&value9==="X"&& player==="X"){
    alert("Voitto!")
  }
- if(Value4==="O"&&Value==="O"&& player==="O"){
+ if(value4==="O"&&value==="O"&& player==="O"){
   alert("Voitto!")
-}else if(Value5==="O"&&Value3==="O"&& player==="O"){
+}else if(value5==="O"&&value3==="O"&& player==="O"){
  alert("Voitto!")
-}else if(Value8==="O"&&Value9==="O"&& player==="O"){
+}else if(value8==="O"&&value9==="O"&& player==="O"){
  alert("Voitto!")
 }
   }
   const alakeski = () =>{
-    if(Value8=== ""){
+    if(value8=== ""){
       if(player === "X"){
         setValue8("X");
       }else{
@@ -242,19 +242,19 @@ alert("Voitto!")
    }else{
     alert("Ruutu on jo käytössä!")
    }
-   if(Value2==="X"&&Value5==="X"&& player==="X"){
+   if(value2==="X"&&value5==="X"&& player==="X"){
     alert("Voitto!")
-  }else if(Value7==="X"&& Value9==="X"&& player==="X"){
+  }else if(value7==="X"&& value9==="X"&& player==="X"){
    alert("Voitto!")
  }
- if(Value2==="O"&&Value5==="O"&& player==="O"){
+ if(value2==="O"&&value5==="O"&& player==="O"){
    alert("Voitto!")
-}else if(Value7==="O"&&Value9==="O"&& player==="O"){
+}else if(value7==="O"&&value9==="O"&& player==="O"){
   alert("Voitto!")
 }
   }
   const alaoikea = () =>{
-    if(Value9=== ""){
+    if(value9=== ""){
       if(player === "X"){
         setValue9("X");
       }else{
@@ -268,23 +268,23 @@ alert("Voitto!")
    }else{
     alert("Ruutu on jo käytössä!")
    }
-   if(Value6==="X"&&Value3==="X"&& player==="X"){
+   if(value6==="X"&&value3==="X"&& player==="X"){
     alert("Voitto!")
-  }else if(Value==="X"&&Value5==="X"&& player==="X"){
+  }else if(value==="X"&&value5==="X"&& player==="X"){
    alert("Voitto!")
- }else if(Value7==="X"&&Value8==="X"&& player==="X"){
+ }else if(value7==="X"&&value8==="X"&& player==="X"){
    alert("Voitto!")
  }
- if(Value3==="O"&&Value6==="O"&& player==="O"){
+ if(value3==="O"&&value6==="O"&& player==="O"){
    alert("Voitto!")
- }else if(Value==="O"&&Value5==="O"&& player==="O"){
+ }else if(value==="O"&&value5==="O"&& player==="O"){
   alert("Voitto!")
-}else if(Value7==="O"&&Value8==="O"&& player==="O"){
+}else if(value7==="O"&&value8==="O"&& player==="O"){
   alert("Voitto!")
 }
   }
 
-  if(Value!==""&&Value2!==""&&Value3!==""&&Value4!==""&&Value5!==""&&Value6!==""&&Value7!==""&&Value8!==""&&Value9!==""){
+  if(value!==""&&value2!==""&&value3!==""&&value4!==""&&value5!==""&&value6!==""&&value7!==""&&value8!==""&&value9!==""){
     alert("Tasapeli! Aloita alusta!")
   }
 
@@ -308,19 +308,19 @@ alert("Voitto!")
         <button onClick={Reset}>Aloita asusta</button>
         <p>On {player} vuoro</p>
       <div className="column">
-        <span className="square" onClick={ylavasen}>{Value}</span>
-        <span className="square" onClick={ylakeski}>{Value2}</span>
-        <span className="square" onClick={ylaoikea}>{Value3}</span>
+        <span className="square" onClick={ylavasen}>{value}</span>
+        <span className="square" onClick={ylakeski}>{value2}</span>
+        <span className="square" onClick={ylaoikea}>{value3}</span>
       </div>
       <div className="column">
-        <span className="square" onClick={keskivasen}>{Value4}</span>
-        <span className="square"onClick={keskikeski}>{Value5}</span>
-        <span className="square"onClick={keskioikea}>{Value6}</span>
+        <span className="square" onClick={keskivasen}>{value4}</span>
+        <span className="square"onClick={keskikeski}>{value5}</span>
+        <span className="square"onClick={keskioikea}>{value6}</span>
       </div>
       <div className="column">
-        <span className="square"onClick={alavasen}>{Value7}</span>
-        <span className="square"onClick={alakeski}>{Value8}</span>
-        <span className="square"onClick={alaoikea}>{Value9}</span>
+        <span className="square"onClick={alavasen}>{value7}</span>
+        <span className="square"onClick={alakeski}>{value8}</span>
+        <span className="square"onClick={alaoikea}>{value9}</span>
       </div>
     </div>
     </div>
