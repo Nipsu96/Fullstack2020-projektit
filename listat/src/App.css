@@ -50,5 +50,8 @@ body{
 .nimetVasen,.nimetOikea{
   margin-right:3em;
   margin-left: 2em;
-  
+}
+
+input{
+  margin-bottom: 1em;
 }
