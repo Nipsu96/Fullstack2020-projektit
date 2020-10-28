@@ -41,12 +41,19 @@ body{
   font-size: 16px;
   width: 10em;
 } 
+
+.nimibutton:focus{
+  background-color: aquamarine;
+}
+.nimibutton:active{
+  background-color: aquamarine;
+}
+
 .nuolet{
   display: inline-block;
   padding-top: 4em;
  
 }
-
 .nimetVasen,.nimetOikea{
   margin-right:3em;
   margin-left: 2em;

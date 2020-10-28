@@ -18,15 +18,12 @@ function App() {
   useEffect(() => {
     const resultsVas = nimetVas.filter(item => item.includes(searchVas)
     );
-    setSearchResultsVas(resultsVas);
-  }, [nimetVas,searchVas]);
-
-  //oikealista
-  useEffect(() => {
+    setSearchResultsVas(resultsVas)
     const resultsOik = nimetOik.filter(item => item.includes(searchOik)
     );
     setSearchResultsOik(resultsOik);
-  }, [nimetOik,searchOik]);
+  }, [nimetOik,nimetVas]
+  );
 
   const nappulaPainettu = (index) => () => {
     console.log("Nappula painettu" + index)
@@ -49,22 +46,30 @@ function App() {
     console.log(nimetVas)
     let uusiOikeaLista = nimetOik.filter(item=>item!==painettu)
     setNimetOik(uusiOikeaLista)
+    
   }
   const moveright =  () => {
     console.log("Nimi siirretty oikealle")
     console.log(painettu)
     let uusilista = nimetOik.concat([painettu])
     setNimetOik(uusilista)
-    console.log(nimetOik)
-    let uusiVasenLista = nimetVas.filter(item=>item!==painettu)
+    console.log(uusilista)
+    let uusiVasenLista = searchResultsVas.filter(item=>item!==painettu)
     setNimetVas(uusiVasenLista)
+    console.log(uusiVasenLista)
   }
 
   const etsiVasen = (event) =>{
     setSearchVas(event.target.value)
+    const resultsVas = nimetVas.filter(item => item.toLocaleLowerCase().includes(event.target.value.toLocaleLowerCase())
+    );
+    setSearchResultsVas(resultsVas);
   }
   const etsiOikea = (event) =>{
     setSearchOik(event.target.value)
+    const resultsOik = nimetOik.filter(item => item.toLocaleLowerCase().includes(event.target.value.toLocaleLowerCase())
+    );
+    setSearchResultsOik(resultsOik)
   }
   return (
     <div className="Whole">
@@ -74,7 +79,7 @@ function App() {
         <div className="nimetVasen"> 
         
         <input placeholder="Suodata" onChange={etsiVasen}value={searchVas}></input>
-         {searchResultsVas.map((item, index) => <button key={index} onClick={nappulaPainettu(index)}
+         {nimetVas.length===0?"Tämä lista on tyhjä":searchResultsVas.map((item, index) => <button className="nimibutton" key={index} onClick={nappulaPainettu(index)}
           >{item}</button>)}<br />
         </div>
         <div className="nuolet">
@@ -83,7 +88,7 @@ function App() {
         </div>
         <div className="nimetOikea">
         <input placeholder="Suodata" onChange={etsiOikea}value={searchOik}></input>
-          {searchResultsOik.map((item, index) => <button key={index} onClick={nappulaPainettuOik(index)}
+          {nimetOik.length===0?"Tämä lista on tyhjä" : searchResultsOik.map((item, index) => <button className="nimibutton" key={index} onClick={nappulaPainettuOik(index)}
           >{item}</button>)}<br />
         </div>
       </div>
