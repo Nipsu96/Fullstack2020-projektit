@@ -1,0 +1,25 @@
+.App {
+ 
+  text-align: center;
+}
+
+body{
+   background-image: url(./img/cute_panda.jpg);
+}
+
+.Whole{
+  margin-top: 4em;
+  margin-left: 33%;
+  margin-right: 30%;
+}
+.nimet{
+  background-color: aliceblue;
+  border-radius: 1em;
+  box-shadow: 7px 7px 5px	rgb(122, 122, 122);
+  border:1px solid black;
+  text-align: center;
+  padding-bottom: 1em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  width:25rem;
+}
