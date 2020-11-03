@@ -63,7 +63,6 @@ function App() {
     let syvakopio = JSON.parse(JSON.stringify(data))
     syvakopio[vanhemmanindex].lapset[lapsenindex].lapsennimi = event.target.value
     setData(syvakopio)
-
   }
   return (
     <div className="Whole">
