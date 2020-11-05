@@ -48,8 +48,50 @@ function App() {
           {
             vastaus: "Sunnuntai", valittu: false, oikea: false
           }]
+    },
+    {
+      kysymys: "Minkä värinen on paloauto?",
+      vastaukset:
+        [
+          {
+            vastaus: "Sininen", valittu: false, oikea: false
+          },
+          {
+            vastaus: "Valkoinen", valittu: false, oikea: false
+          },
+          {
+            vastaus: "Vihreä", valittu: false, oikea: false
+          },
+          {
+            vastaus: "Punainen", valittu: false, oikea: true
+          }
+        ]
+    },
+    {
+      kysymys: "Montako päivää on viikossa?",
+      vastaukset:
+        [
+          {
+            vastaus: "5", valittu: false, oikea: false
+          },
+          {
+            vastaus: "2", valittu: false, oikea: false
+          },
+          {
+            vastaus: "8", valittu: false, oikea: false
+          },
+          {
+            vastaus: "4", valittu: false, oikea: false
+          },
+          {
+            vastaus: "7", valittu: false, oikea: true
+          }]
     }])
   const [palautus, setPalautus] = useState(false)
+  const [tentti1, setTentti1] = useState([])
+  const [tentti2, setTentti2] = useState()
+
+
 
 
   useEffect(() => {
@@ -73,28 +115,21 @@ function App() {
     setData(syvakopio)
   }
 
-  const naytaOikeatVastaukset = () => {
-    if (palautus === false) {
-      return <div className="askCards">
-        {data.map((item, index) => <div key={index} className="Card"><div className="Kysymys" >{item.kysymys}</div>
-          {item.vastaukset ? <AskCard index={index} vastaukset={item.vastaukset} VastausValittu={VastausValittu}></AskCard> : ""}
-        </div>)}
-        <button onClick={naytaVastaukset}>Näytä Vastaukset</button>
-      </div>
-    } else {
-      return <div className="askCards">
-        {data.map((item, index) => <div key={index} className="Card"><div className="Kysymys" >{item.kysymys}</div>
-          {item.vastaukset ? <ShowAnswers index={index} vastaukset={item.vastaukset} VastausValittu={VastausValittu}></ShowAnswers> : ""}
-        </div>)}
-        <button onClick={naytaVastaukset}>Näytä Vastaukset</button>
-      </div>
-    }
-  }
 
   const naytaVastaukset = (item) => {
     setPalautus(true)
     console.log("Catch")
   }
+
+  const filterTentti2 = (item) => {
+    data.filter(tentti => tentti === "Tentti2")
+    console.log(data.tentti)
+  }
+  // const painikePainettu = ()=>{
+  //   let listaJarnot = nimet.filter(item=>item==="Jarno")
+  //   setOsaNimet(listaJarnot)
+  // }
+
 
   // if (data.valittu===true && data.oikea===true){
   //   console.log("Sait oikein")
@@ -112,15 +147,15 @@ function App() {
         </ul>
       </header>
       <div className="main">
-        <button className="textbutton">Tentti 1</button>
-        <button className="textbutton2">Tentti 2</button>
+        <button className="textbutton" >Tentti 1</button>
+        <button className="textbutton2" onClick={filterTentti2}>Tentti 2</button>
         <div className="askCards">
           {palautus === false ? data.map((item, index) => <div key={index} className="Card"><div className="Kysymys" >{item.kysymys}</div>
             {item.vastaukset ? <AskCard index={index} vastaukset={item.vastaukset} VastausValittu={VastausValittu}></AskCard> : ""}
           </div>)
             :
             data.map((item, index) => <div key={index} className="Card"><div className="Kysymys" >{item.kysymys}</div>
-              {item.vastaukset ? <ShowAnswers index={index} vastaukset={item.vastaukset} VastausValittu={VastausValittu}></ShowAnswers> : ""}
+              {item.vastaukset ? <ShowAnswers index={index} valittu={data.valittu}vastaukset={item.vastaukset} VastausValittu={VastausValittu}></ShowAnswers> : ""}
             </div>)}
           <button className="showbutton" onClick={naytaVastaukset}>Näytä Vastaukset</button>
         </div>
