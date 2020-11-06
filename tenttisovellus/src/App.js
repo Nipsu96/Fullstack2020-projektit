@@ -5,18 +5,12 @@ import ShowAnswers from './ShowAnswer';
 
 function App() {
   const [data, setData] = useState([
-    {
-      kysymys: "Kumpi oli ensin:Muna vai Kana?",
+    {tentti:"Tentti1",kysymykset:[
+      {kysymys: "Kumpi oli ensin:Muna vai Kana?",
       vastaukset:
         [
           {
             vastaus: "Muna", valittu: false, oikea: false
-          },
-          {
-            vastaus: "Kana", valittu: false, oikea: false
-          },
-          {
-            vastaus: "Ei Kumpikaan", valittu: false, oikea: false
           },
           {
             vastaus: "Ei tiedetä", valittu: false, oikea: true
@@ -28,18 +22,6 @@ function App() {
       vastaukset:
         [
           {
-            vastaus: "Maanantai", valittu: false, oikea: false
-          },
-          {
-            vastaus: "Tiistai", valittu: false, oikea: false
-          },
-          {
-            vastaus: "Keskiviikko", valittu: false, oikea: false
-          },
-          {
-            vastaus: "Torstai", valittu: false, oikea: false
-          },
-          {
             vastaus: "Perjantai", valittu: false, oikea: true
           },
           {
@@ -48,16 +30,14 @@ function App() {
           {
             vastaus: "Sunnuntai", valittu: false, oikea: false
           }]
-    },
+    }]},
+    {tentti:"Tentti2",kysymykset:[
     {
       kysymys: "Minkä värinen on paloauto?",
       vastaukset:
         [
           {
             vastaus: "Sininen", valittu: false, oikea: false
-          },
-          {
-            vastaus: "Valkoinen", valittu: false, oikea: false
           },
           {
             vastaus: "Vihreä", valittu: false, oikea: false
@@ -67,16 +47,9 @@ function App() {
           }
         ]
     },
-    {
-      kysymys: "Montako päivää on viikossa?",
+    { kysymys: "Montako päivää on viikossa?",
       vastaukset:
         [
-          {
-            vastaus: "5", valittu: false, oikea: false
-          },
-          {
-            vastaus: "2", valittu: false, oikea: false
-          },
           {
             vastaus: "8", valittu: false, oikea: false
           },
@@ -86,14 +59,10 @@ function App() {
           {
             vastaus: "7", valittu: false, oikea: true
           }]
-    }])
+    }]}])
   const [palautus, setPalautus] = useState(false)
-  const [tentti1, setTentti1] = useState([])
-  const [tentti2, setTentti2] = useState()
-
-
-
-
+  const [aktiivinenTentti, setAktiivinenTentti] = useState(0)
+ 
   useEffect(() => {
     let jemma = window.localStorage;
     let uusidata = jemma.getItem("data")
@@ -109,9 +78,9 @@ function App() {
     window.localStorage.setItem("data", JSON.stringify(data))
   }, [data])
 
-  const VastausValittu = (event, kysymysindex, vastausindex) => {
+  const VastausValittu = (event, kysymysindex,tenttiindex, vastausindex) => {
     let syvakopio = JSON.parse(JSON.stringify(data))
-    syvakopio[kysymysindex].vastaukset[vastausindex].valittu = event.target.checked
+    syvakopio[tenttiindex].kysymykset[kysymysindex].vastaukset[vastausindex].valittu = event.target.checked
     setData(syvakopio)
   }
 
@@ -121,23 +90,10 @@ function App() {
     console.log("Catch")
   }
 
-  const filterTentti2 = (item) => {
-    data.filter(tentti => tentti === "Tentti2")
-    console.log(data.tentti)
+  const vaihdaTentti = (index) => {
+    setAktiivinenTentti(index)
   }
-  // const painikePainettu = ()=>{
-  //   let listaJarnot = nimet.filter(item=>item==="Jarno")
-  //   setOsaNimet(listaJarnot)
-  // }
-
-
-  // if (data.valittu===true && data.oikea===true){
-  //   console.log("Sait oikein")
-  // }else if(data.valittu!==true && data.oikea!==true){
-  //   console.log("Ei yhtään oikeaa vastausta")
-  // }
-
-
+  
   return (
     <div className="App">
       <header className="App-header">
@@ -147,14 +103,13 @@ function App() {
         </ul>
       </header>
       <div className="main">
-        <button className="textbutton" >Tentti 1</button>
-        <button className="textbutton2" onClick={filterTentti2}>Tentti 2</button>
+        {data.map((tentti,index)=><button key={index} onClick={()=>vaihdaTentti(index)}>{tentti.tentti}</button>)}
         <div className="askCards">
-          {palautus === false ? data.map((item, index) => <div key={index} className="Card"><div className="Kysymys" >{item.kysymys}</div>
-            {item.vastaukset ? <AskCard index={index} vastaukset={item.vastaukset} VastausValittu={VastausValittu}></AskCard> : ""}
+          {palautus === false ? data[aktiivinenTentti].kysymykset.map((item, index) => <div key={index} className="Card"><div className="Kysymys" >{item.kysymys}</div>
+            {item.vastaukset ? <AskCard index={index} tenttiindex={aktiivinenTentti} vastaukset={item.vastaukset} VastausValittu={VastausValittu}></AskCard> : ""}
           </div>)
             :
-            data.map((item, index) => <div key={index} className="Card"><div className="Kysymys" >{item.kysymys}</div>
+            data[aktiivinenTentti].kysymykset.map((item, index) => <div key={index} className="Card"><div className="Kysymys" >{item.kysymys}</div>
               {item.vastaukset ? <ShowAnswers index={index} valittu={data.valittu}vastaukset={item.vastaukset} VastausValittu={VastausValittu}></ShowAnswers> : ""}
             </div>)}
           <button className="showbutton" onClick={naytaVastaukset}>Näytä Vastaukset</button>
