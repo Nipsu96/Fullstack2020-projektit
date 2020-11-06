@@ -58,6 +58,34 @@ function App() {
     syvakopio[index].sukunimi = event.target.value
     setData(syvakopio)
   }
+  const etunimiMuuttui = (event, index) => {
+    let syvakopio = JSON.parse(JSON.stringify(data))
+    syvakopio[index].etunimi = event.target.value
+    setData(syvakopio)
+  }
+
+  const ikaMuuttui = (event, index) => {
+    let syvakopio = JSON.parse(JSON.stringify(data))
+    syvakopio[index].ika = event.target.value
+    setData(syvakopio)
+  }
+
+  const lisaahenkilo= () => {
+  let syvakopio = JSON.parse(JSON.stringify(data))
+  let uusihenkilo= { etunimi: "", sukunimi: "", ika: 0 }
+  syvakopio.push(uusihenkilo) 
+   setData(syvakopio)
+    // syvakopio[index].ika = event.target.value
+  
+  }
+  const poistahenkilo= (index) => {
+    let syvakopio = JSON.parse(JSON.stringify(data))
+    syvakopio.splice(index,1)
+     setData(syvakopio)
+      // syvakopio[index].ika = event.target.value
+    
+    }
+
 
   const lapanenMuuttui = (event, vanhemmanindex, lapsenindex) => {
     let syvakopio = JSON.parse(JSON.stringify(data))
@@ -67,10 +95,15 @@ function App() {
   return (
     <div className="Whole">
       <div className="nimet">
-        {data.map((item, index) => <div key={index}><input onChange={(event) => sukunimiMuuttui(event, index)} value={item.sukunimi}></input>{item.etunimi} {item.ika}
+        {data.map((item, index) => <div key={index}><input onChange={(event) => sukunimiMuuttui(event, index)} value={item.sukunimi}></input>
+
+        <input onChange={(event) => etunimiMuuttui(event, index)} value={item.etunimi} ></input>
+
+        <input onChange={(event) => ikaMuuttui(event, index)} value={item.ika}></input>
+      
         {item.lapset?<LapsiLista parentindex={index}lapsilista={item.lapset} lapanenMuuttui={lapanenMuuttui}></LapsiLista>:""}
-        </div>)}
-        <button onClick={painikepainettu}>Paina minua ;)</button>
+        <button onClick={()=>poistahenkilo(index)}>Poista henkilö</button>
+        </div>)}<button onClick={lisaahenkilo}>lisää henkilö</button>
         {/* {nappula.map((nappula, index) => <input key={index} onChange={(event)=>nappulaMuuttui(event,index)} value={nappula} ></input>)}
 
         {nimet.map((item,index)=><button key={index} onClick={nappulaPainettu(index)}

@@ -106,11 +106,11 @@ function App() {
         {data.map((tentti,index)=><button key={index} onClick={()=>vaihdaTentti(index)}>{tentti.tentti}</button>)}
         <div className="askCards">
           {palautus === false ? data[aktiivinenTentti].kysymykset.map((item, index) => <div key={index} className="Card"><div className="Kysymys" >{item.kysymys}</div>
-            {item.vastaukset ? <AskCard index={index} tenttiindex={aktiivinenTentti} vastaukset={item.vastaukset} VastausValittu={VastausValittu}></AskCard> : ""}
+            {item.vastaukset && <AskCard index={index} tenttiindex={aktiivinenTentti} vastaukset={item.vastaukset} VastausValittu={VastausValittu}></AskCard> }
           </div>)
             :
             data[aktiivinenTentti].kysymykset.map((item, index) => <div key={index} className="Card"><div className="Kysymys" >{item.kysymys}</div>
-              {item.vastaukset ? <ShowAnswers index={index} valittu={data.valittu}vastaukset={item.vastaukset} VastausValittu={VastausValittu}></ShowAnswers> : ""}
+              {item.vastaukset &&<ShowAnswers index={index} valittu={data.valittu}vastaukset={item.vastaukset} VastausValittu={VastausValittu}></ShowAnswers>}
             </div>)}
           <button className="showbutton" onClick={naytaVastaukset}>Näytä Vastaukset</button>
         </div>
