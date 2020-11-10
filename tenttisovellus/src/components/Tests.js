@@ -86,9 +86,12 @@ function Tentit()
   }
 
 
-  const naytaVastaukset = (item) => {
+  const naytaVastaukset = ( kysymysindex,tenttiindex) => {
     setPalautus(true)
-    console.log("Catch")
+   console.log("Catch") 
+  //  let syvakopio = JSON.parse(JSON.stringify(data))
+  //   let lisaa =  syvakopio[tenttiindex].kysymykset[kysymysindex].vastaukset
+  //   console.log(kysymysindex)
   }
 
   const vaihdaTentti = (index) => {
@@ -104,7 +107,7 @@ function Tentit()
       data[aktiivinenTentti].kysymykset.map((item, index) => <div key={index} className="Card"><div className="Kysymys" >{item.kysymys}</div>
         {item.vastaukset &&<ShowAnswers index={index} valittu={data.valittu}vastaukset={item.vastaukset} VastausValittu={VastausValittu}></ShowAnswers>}
       </div>)}
-    <button className="showbutton" onClick={naytaVastaukset}>Näytä Vastaukset</button>
+    <button className="showbutton" onClick={(index)=>{naytaVastaukset(index,aktiivinenTentti)}}>Näytä Vastaukset</button>
   </div>
 </div>
 }

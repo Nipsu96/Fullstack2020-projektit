@@ -98,12 +98,6 @@ function ChangeTests() {
         syvakopio[tenttiindex].kysymykset[kysymysindex].kysymys = e.target.value
         setData(syvakopio)
       }
-    
-    //   const ikaMuuttui = (event, index) => {
-    //     let syvakopio = JSON.parse(JSON.stringify(data))
-    //     syvakopio[index].ika = event.target.value
-    //     setData(syvakopio)
-    //   }
 
     const lisaaKysymys= ( kysymysindex,tenttiindex) => {
         let syvakopio = JSON.parse(JSON.stringify(data))
@@ -156,7 +150,9 @@ return <div>
 <div className="main">
   {data.map((tentti,index)=><button className="TenttiButton" key={index} onClick={()=>vaihdaTentti(index)}>{tentti.tentti}</button>)}
   <div className="askCards">
-    {data[aktiivinenTentti].kysymykset.map((item, index) => <div key={index} className="Card"><div className="Kysymys" ><span><input className="muokkaaKys"   type="text"className="muokkaaKys" onChange={(e) => {MuokkaaKysymysta(e, index,aktiivinenTentti) }}value={item.kysymys} rows="1" ></input></span><span  className="poisto" onClick={(e) => {poistaKysymys(e, index,aktiivinenTentti) }}><DeleteIcon style={{ color: "grey",fontSize:25, margin:"auto", verticalAlign:"middle" }}></DeleteIcon></span></div>
+    {data[aktiivinenTentti].kysymykset.map((item, index) => <div key={index} className="Card"><div className="Kysymys" ><span><input type="text"className="muokkaaKys" onChange={(e) => {MuokkaaKysymysta(e, index,aktiivinenTentti) }}value={item.kysymys} rows="1" ></input></span><span  className="poisto" onClick={(e) => {poistaKysymys(e, index,aktiivinenTentti) }}><DeleteIcon style={{ color: "grey",fontSize:25, margin:"auto", verticalAlign:"middle" }}></DeleteIcon></span></div>
+
+
     {item.vastaukset.map((alkio, vastausindex) =>
       <div key={vastausindex}><label className="checkbox"><input type="checkbox" onChange={(e) => {OikeaVastausValittu(e, index,aktiivinenTentti,vastausindex) }} checked={alkio.oikea} /><span><input  type="text"className="muokkaaVas" onChange={(e) => {MuokkaaVastausta(e, index,aktiivinenTentti,vastausindex) }}value={alkio.vastaus} rows="1" ></input></span></label>
       <span  className="poisto" onClick={(e) => {poistavaihtoehto(e, index,aktiivinenTentti,vastausindex) }}><DeleteIcon style={{ color: "grey",fontSize:28,verticalAlign:"middle"}}></DeleteIcon></span>
@@ -164,33 +160,9 @@ return <div>
       <div  className="lisays" onClick={() => {lisaavaihtoehto( index,aktiivinenTentti) }}><AddCircleIcon style={{ color: "grey",fontSize:28,verticalAlign:"middle"}}></AddCircleIcon></div>
     </div>)}
     <div className="lisaaKys" onClick={(index) => {lisaaKysymys( index,aktiivinenTentti) }}><AddCircleIcon style={{ color: "grey",fontSize:28,verticalAlign:"middle",textAlign:"center"}}></AddCircleIcon></div>
-    {/* <button className="showbutton" onClick={naytaVastaukset}>Näytä Vastaukset</button> */}
   </div>
   
 </div>
-{/* <div className="main">
-  {data.map((tentti,index)=><button key={index} onClick={()=>vaihdaTentti(index)}>{tentti.tentti}</button>)}
-  <div className="askCards">
-    {palautus === false ? data[aktiivinenTentti].kysymykset.map((item, index) => <div key={index} className="Card"><div className="Kysymys" >{item.kysymys}</div>
-      {item.vastaukset && <AskCard index={index} tenttiindex={aktiivinenTentti} vastaukset={item.vastaukset} VastausValittu={VastausValittu}></AskCard> }
-    </div>)
-      :
-      data[aktiivinenTentti].kysymykset.map((item, index) => <div key={index} className="Card"><div className="Kysymys" >{item.kysymys}</div>
-        {item.vastaukset &&<ShowAnswers index={index} valittu={data.valittu}vastaukset={item.vastaukset} VastausValittu={VastausValittu}></ShowAnswers>}
-      </div>)}
-    <button className="showbutton" onClick={naytaVastaukset}>Näytä Vastaukset</button>
-  </div>
-</div> */}
-  {/* // {data.map((item, index) => <div key={index}><input onChange={(event) => sukunimiMuuttui(event, index)} value={item.sukunimi}></input>
-
-    // <input onChange={(event) => etunimiMuuttui(event, index)} value={item.etunimi} ></input>
-
-    // <input onChange={(event) => ikaMuuttui(event, index)} value={item.ika}></input>
-  
-    // {item.lapset?<LapsiLista parentindex={index}lapsilista={item.lapset} lapanenMuuttui={lapanenMuuttui}></LapsiLista>:""}
-    // <button onClick={()=>poistahenkilo(index)}>Poista henkilö</button>
-    // </div>)}
-    //     } */}
     </div>
   }
   
