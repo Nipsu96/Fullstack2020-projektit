@@ -1,0 +1,28 @@
+{
+    "henkilöt": [
+        {
+            "id": 1,
+            "etunimi": "Pekka",
+            "sukunimi": "Jakamo",
+            "ika": 69,
+            "lapset": [
+                {
+                    "id": 1,
+                    "lapsennimi": "Liisa",
+                    "toinen_nimi": "Kaisa"
+                },
+                {
+                    "id": 2,
+                    "lapsennimi": "kaapo",
+                    "toinen_nimi": "Riitta"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "etunimi": "Jarmo",
+            "sukunimi": "Jakamo",
+            "ika": 70
+        }
+    ]
+}

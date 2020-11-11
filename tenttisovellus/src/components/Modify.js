@@ -161,9 +161,8 @@ return <div>
     </div>)}
     <div className="lisaaKys" onClick={(index) => {lisaaKysymys( index,aktiivinenTentti) }}><AddCircleIcon style={{ color: "grey",fontSize:28,verticalAlign:"middle",textAlign:"center"}}></AddCircleIcon></div>
   </div>
-  
 </div>
-    </div>
+</div>
   }
   
 
