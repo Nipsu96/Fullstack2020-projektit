@@ -1,27 +1,34 @@
-{"henkilot": [
-      {
-          "id": 1,
-          "etunimi": "Pekka",
-          "sukunimi": "Jakamo",
-          "ika": 69,
-          "lapset": [
-              {
-                  "id": 1,
-                  "lapsennimi": "Liisa",
-                  "toinen_nimi": "Kaisa"
-              },
-              {
-                  "id": 2,
-                  "lapsennimi": "kaapo",
-                  "toinen_nimi": "Riitta"
-              }
-          ]
-      },
-      {
-          "id": 2,
-          "etunimi": "Jarmo",
-          "sukunimi": "Jakamo",
-          "ika": 70
-      }
+{
+  "henkilot": [
+    {
+      "etunimi": "Pekka",
+      "sukunimi": "Jakamo",
+      "ika": 69,
+      "lapset": [
+        {
+          "lapsennimi": "Liisa",
+          "toinen_nimi": "Kaisa"
+        },
+        {
+          "lapsennimi": "kaapo",
+          "toinen_nimi": "Riitta"
+        }
+      ]
+    },
+    {
+      "etunimi": "Jarmo",
+      "sukunimi": "Jakamo",
+      "ika": 70
+    },
+    {
+      "etunimi": "Jussi",
+      "sukunimi": "Pekkamo",
+      "ika": "30"
+    },
+    {
+      "etunimi": "Kimo",
+      "sukunimi": "Karkki",
+      "ika": 0
+    }
   ]
 }
