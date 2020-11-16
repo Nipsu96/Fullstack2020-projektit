@@ -189,7 +189,7 @@ function App() {
   //   syvakopio[vanhemmanindex].lapset[lapsenindex].lapsennimi = event.target.value
   //   setData(syvakopio)
   // }
-
+console.log(state)
 
   return (
     <div className="Whole">
