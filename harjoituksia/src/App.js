@@ -87,21 +87,7 @@ function App() {
       finally {
 
       }
-    }/*  
-    axios.put("http://localhost:3005/ihmiset", data)
-    .then(function (response) {
-      // handle success
-      console.log(response);
-    })
-    .catch(function (error) {
-      // handle error
-      console.log(error);
-    })
-    .then(function () {
-      // always executed
-    }); */
-
-
+    }
     if (dataAlustettu) {
       updateData();
     }
