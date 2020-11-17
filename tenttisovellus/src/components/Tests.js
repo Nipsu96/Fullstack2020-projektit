@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import '../App.css';
 import AskCard from './AskCard';
 import ShowAnswers from './ShowAnswer';
@@ -12,7 +12,6 @@ function Tentit(props)
   const naytaVastaukset = ( kysymysindex,tenttiindex) => {
     setPalautus(true)
    console.log("Catch") 
-
   }
 
   const vaihdaTentti = (index) => {
