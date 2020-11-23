@@ -11,7 +11,7 @@ function Tentit(props)
  
   const naytaVastaukset = ( kysymysindex,tenttiindex) => {
     setPalautus(true)
-   console.log("Catch") 
+   console.log(props.valittu)
   }
 
   const vaihdaTentti = (index) => {

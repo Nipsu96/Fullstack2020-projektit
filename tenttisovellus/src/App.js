@@ -7,7 +7,9 @@ import {
   Link
 } from "react-router-dom";
 import Tentit from './components/Tests';
+import Charts from './components/Chart';
 import ChangeTests from './components/Modify';
+
 
 const data = [
   {
@@ -99,7 +101,6 @@ function reducer(state, action) {
               vastaus: "", valittu: false, oikea: false
             }
           ]}
-
       lisaakysymys.push(uusikysymys)
       syvakopio[action.data.tenttiindex].kysymykset = lisaakysymys
       return syvakopio
@@ -159,7 +160,7 @@ function App() {
         <header className="App-header">
           <ul>
             <li><Link to="/tests" className="active" >Tentit</Link></li>
-            <li><Link to="about">Tietoa sovelluksesta</Link></li>
+            <li><Link to="/about">Tietoa sovelluksesta</Link></li>
             <li><Link to="/admin">Muokkaa/poista/lisää</Link></li>
           </ul>
         </header>
@@ -169,6 +170,9 @@ function App() {
           </Route>
           <Route path="/admin">
             {state.length > 0 ? <ChangeTests data={state} dispatch={dispatch} /> : "Tietoa haetaan"}
+          </Route>
+          <Route path="/about">
+            {state.length > 0 ? <Charts data={state}/> : "Tietoa haetaan"}
           </Route>
         </Switch>
       </div></Router>
