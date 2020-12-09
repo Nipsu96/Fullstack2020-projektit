@@ -12,8 +12,9 @@ function KeskiArvot(props)
       
         let result= await axios.get("http://localhost:3005/keskiarvot/")  
         console.log("Tässä on keskiarvot")
+       
         props.dispatch({ type: "INIT_DATA", data: result.data})
-        
+        Number(result.data.keskiarvo).toFixed(2)
       } catch (exception) {
         alert("Keskiarvojen hakeminen epäonnistui")
       }  
@@ -40,7 +41,7 @@ function KeskiArvot(props)
       <tr>
       <td>{alkio.etunimi}</td>
       <td>{alkio.sukunimi}</td>
-        <td>{alkio.keskiarvo}</td>
+        <td>{Number(alkio.keskiarvo).toFixed(1)}</td>
       </tr>
    )} </table>
   </div>
