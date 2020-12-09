@@ -12,9 +12,9 @@ app.use(cors({
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }))
 
-app.use('/paljonkelloon',function(req,res,next){
-    console.log('Kello on :',Date.now())
-    next()
+app.use('/paljonkelloon', function (req, res, next) {
+  console.log('Kello on :', Date.now())
+  next()
 })
 
 
@@ -43,14 +43,22 @@ app.get('/keskiarvot', (req, res, next) => {
     res.send(result.rows)
   })
 })
-app.put('/tenttitulokset/:id', (req, res, next) => {
-  db.query('UPDATE public.keskiarvo SET keskiarvo= (SELECT AVG(tulos) FROM tenttitulokset WHERE oppilas_id=$1) WHERE oppilas_id= $1;', [req.params.id], (err, result) => {
+app.put('/tenttitulokset', (req, res, next) => {
+  db.query('SELECT DISTINCT oppilas_id FROM tenttitulokset', (err, result) => {
     if (err) {
       return next(err)
     }
-    res.send(result.rows)
+    for (let x = 0; x < result.rows.length; x++) {
+      db.query('UPDATE public.keskiarvo SET keskiarvo= (SELECT AVG(tulos) FROM tenttitulokset WHERE oppilas_id=$1) WHERE oppilas_id= $1;', [result.rows[x].oppilas_id], (err, result) => {
+        if (err) {
+          return next(err)
+        }
+      })
+    }
+    return res.sendStatus(200)
   })
 })
+
 // TenttiTaulun SQL-lauseet
 // Yksittäiset SQL-Lauseet
 app.get('/tentit', (req, res, next) => {
@@ -195,7 +203,7 @@ app.post('/vastaukset', (req, res, next) => {
 
 app.put('/vastaukset', (req, res, next) => {
   console.log(req.body)
-  db.query('UPDATE vastaukset SET vastaus=$2  WHERE vaihtoehto_id = $1', [req.body.vaihtoehto_id,req.body.vastaus], (err, result) => {
+  db.query('UPDATE vastaukset SET vastaus=$2  WHERE vaihtoehto_id = $1', [req.body.vaihtoehto_id, req.body.vastaus], (err, result) => {
     if (err) {
       return next(err)
     }

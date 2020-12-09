@@ -8,9 +8,12 @@ function KeskiArvot(props)
   const naytaKeskiarvot= async (index) => {
     console.log("Tässä on keskiarvot")
     try {
-        let result= await axios.get("http://localhost:3005/keskiarvot/")
+      let tulokset= await axios.put("http://localhost:3005/tenttitulokset/")
+      
+        let result= await axios.get("http://localhost:3005/keskiarvot/")  
         console.log("Tässä on keskiarvot")
         props.dispatch({ type: "INIT_DATA", data: result.data})
+        
       } catch (exception) {
         alert("Keskiarvojen hakeminen epäonnistui")
       }  
