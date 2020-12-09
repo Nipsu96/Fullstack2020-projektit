@@ -160,8 +160,7 @@ app.post('/tentit', (req, res,next) => {
             res.send('Väärien poisto onnistui')
           })
         })
-
-        
+  
         app.put('/vastaukset/:id', (req, res,next) => {
           db.query("UPDATE vastaukset SET vastaus=false WHERE vastaus_id = $1", [req.params.id], (err, result) => {
             if (err) {
@@ -171,7 +170,6 @@ app.post('/tentit', (req, res,next) => {
           })
         })
       
-  
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })

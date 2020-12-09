@@ -7,87 +7,22 @@ import {
   Link
 } from "react-router-dom";
 import Tentit from './components/Tests';
-import Charts from './components/Chart';
 import ChangeTests from './components/Modify';
-
-
-const data = [
-  {
-    tentti: "Tentti1", kysymykset: [
-      {
-        kysymys: "Kumpi oli ensin:Muna vai Kana?",
-        vastaukset:
-          [
-            {
-              vastaus: "Muna", valittu: false, oikea: false
-            },
-            {
-              vastaus: "Ei tiedetä", valittu: false, oikea: true
-            }
-          ]
-      },
-      {
-        kysymys: "Mikä viikonpäivä on 13.11?",
-        vastaukset:
-          [
-            {
-              vastaus: "Perjantai", valittu: false, oikea: true
-            },
-            {
-              vastaus: "Lauantai", valittu: false, oikea: false
-            },
-            {
-              vastaus: "Sunnuntai", valittu: false, oikea: false
-            }]
-      }]
-  },
-  {
-    tentti: "Tentti2", kysymykset: [
-      {
-        kysymys: "Minkä värinen on paloauto?",
-        vastaukset:
-          [
-            {
-              vastaus: "Sininen", valittu: false, oikea: false
-            },
-            {
-              vastaus: "Vihreä", valittu: false, oikea: false
-            },
-            {
-              vastaus: "Punainen", valittu: false, oikea: true
-            }
-          ]
-      },
-      {
-        kysymys: "Montako päivää on viikossa?",
-        vastaukset:
-          [
-            {
-              vastaus: "8", valittu: false, oikea: false
-            },
-            {
-              vastaus: "4", valittu: false, oikea: false
-            },
-            {
-              vastaus: "7", valittu: false, oikea: true
-            }]
-      }]
-  }]
+import KeskiArvot from './components/AverageTable';
+import axios from 'axios';
 
 
 function reducer(state, action) {
   let syvakopio = JSON.parse(JSON.stringify(state))
   switch (action.type) {
     case 'VASTAUS_VALITTU':
-      syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].vastaukset[action.data.vastausindex].valittu = action.data.Answer;
-      console.log(action.data.kysymysindex)
+      syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].vaihtoehdot[action.data.vaihtoehtoindex].valittu = action.data.Answer;
       return syvakopio
     case 'OIKEA_VASTAUS':
       syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].vastaukset[action.data.vastausindex].oikea = action.data.newRightAnswer;
       return syvakopio
     case 'VASTAUS_MUUTTUI':
       syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].vastaukset[action.data.vastausindex].vastaus = action.data.newAnswer
-      console.log("Vastausindex", action.data.vastausindex)
       return syvakopio
     case 'KYSYMYS_MUUTTUI':
       syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].kysymys = action.data.newQuestion;
@@ -129,30 +64,77 @@ function reducer(state, action) {
   }
 }
 
+
 function App() {
 
-  const [state, dispatch] = useReducer(reducer, []);
   const [dataAlustettu, setDataAlustettu] = useState(false)
+  const [state, dispatch] = useReducer(reducer, []);
+
+  // const [sukunimi,setSukunimi]= useState([""])
+
 
   useEffect(() => {
-    let jemma = window.localStorage;
-    let uusidata = JSON.parse(jemma.getItem("data"))
 
-    if (!uusidata) {
-      jemma.setItem("data", JSON.stringify(data))
-      dispatch({ type: "INIT_DATA", data: data })
-    } else {
-      dispatch({ type: "INIT_DATA", data: uusidata });
-      setDataAlustettu(true)
+    const createData = async () => {
+
+      try {
+
+        let result = await axios.get("http://localhost:3005/tentit")
+        dispatch({ type: "INIT_DATA", data: result.data })
+        // setData(initialData)
+        setDataAlustettu(true)
+      } catch (exception) {
+        alert("Tietokannan alustaminen epäonnistui")
+      }
     }
+
+    const fetchData = async () => {
+      try {
+        let result = await axios.get("http://localhost:3005/tentit")
+
+        if (result.data.length > 0) {
+          for(var i = 0; i < result.data.length; i++){
+            result.data[i].kyselyt=[]
+            let kysymykset=await axios.get("http://localhost:3005/kysymykset/"+ result.data[i].tentti_id)
+            result.data[i].kysymykset= kysymykset.data
+
+          if(result.data[i].kysymykset.length > 0) {
+            for(var j = 0;j < result.data[i].kysymykset.length;j++){
+              result.data[i].kysymykset[j].vaihtoehdot=[]
+              let vaihtoehdot=await axios.get("http://localhost:3005/vastausvaihtoehdot/"+ result.data[i].kysymykset[j].kysymys_id)
+              result.data[i].kysymykset[j].vaihtoehdot= vaihtoehdot.data
+            }
+            }
+          }
+          dispatch({ type: "INIT_DATA", data: result.data })
+          //          setData(result.data);
+          setDataAlustettu(true)
+        } else {
+          throw ("Nyt pitää data kyllä alustaa!")
+        }
+      }
+      catch (exception) {
+        createData();
+      }
+    }
+    fetchData();
   }, [])
-
   useEffect(() => {
-    if (dataAlustettu)
-      window.localStorage.setItem("data", JSON.stringify(state))
-  }, [state])
 
-  console.log(state)
+    // const updateData = async () => {
+    //   try {
+    //     // let result = await axios.put("http://localhost:3005/tentit", state)
+    //   } catch (exception) {
+    //     console.log("Datan päivitys ei onnistunut")
+    //   }
+    //   finally {
+
+    //   }
+    // }
+    // if (dataAlustettu) {
+    //   updateData();
+    // }
+  }, [state])
 
   return (
     <Router>
@@ -172,7 +154,7 @@ function App() {
             {state.length > 0 ? <ChangeTests data={state} dispatch={dispatch} /> : "Tietoa haetaan"}
           </Route>
           <Route path="/about">
-            {state.length > 0 ? <Charts data={state}/> : "Tietoa haetaan"}
+            {state.length > 0 ? <KeskiArvot data={state} dispatch={dispatch} /> : "Tietoa haetaan"}
           </Route>
         </Switch>
       </div></Router>
