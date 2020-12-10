@@ -1,23 +1,36 @@
 
 // Arrayt
-let weekday=[["Maanantai",8],["",8],["Maanantai",8],["Maanantai",8],["Maanantai",8]]
+// let weekday=[["Maanantai",8],["Tiistai",8],["keskiviikko",8],["Torstai",8],["Perjantai",8]]
 let workhours= [8,9,5,6,7]
 let num= [1,4,100,2,5,4]
 let Sortnum= [1,4,100,2,5,4]
 
-array = [4, 45, 'hgd', '50', 87, 8, 'dhgs', 85, 4, '9', '1a'],
-temp = array.filter(Number).map(Number)
+function Weekday(day,workhours) {
+    this.day = day;
+    this.workhours = workhours;  
+    
+  }
+  var ma = new Weekday("Maanantai", 8);
+  var ti = new Weekday("Tiistai", 9);
+  var ke = new Weekday("Keskiviikko", 6);
+
+  var weekdays= ([ma,ti,ke])
+  console.table(weekdays)
 
 // Työtuntien keskiarvot
 let summa=0;
 for(i=0;i< workhours.length;i++){
-    summa+=workhours[1];
+    summa+=workhours[i];
 }
 let avg= summa/workhours.length
 
-const forLoopMinMax = () => {
+// Min ja Max Math funktiolla
+let min =Math.min(...workhours)    // 1
+let max= Math.max(...workhours) 
+
+//Min ja max for loopilla
+const forLoopMinMax = (workhours) => {
     let min = workhours[0], max = workhours[0]
-  
     for (let i = 1; i < workhours.length; i++) {
       let value = workhours[i]
       min = (value < min) ? value : min
@@ -27,7 +40,7 @@ const forLoopMinMax = () => {
     return [min, max]
   }
   
-  const [forLoopMin, forLoopMax] = forLoopMinMax()
+  const [forLoopMin, forLoopMax] = forLoopMinMax(workhours)
 
   //Sort ilman comparea
 num.sort();
@@ -36,8 +49,8 @@ num.sort();
 Sortnum.sort(function(a, b) {
     return a - b;
   });
-
-console.log("Tämä on Min:",forLoopMin, "Tämä on Max",forLoopMax) // Minimum: -37, Maximum: 37
+console.log("Tämä on Min:",min,"Tämä on max:",max)
+console.log("Tämä on Min forloopilla:",forLoopMin, "Tämä on Max forloopilla",forLoopMax) 
 console.log("Tämä on keskiarvo",avg)
 console.log("Tämä on sort ilman Comparea",num);
 console.log("Tämä on sort Comparen kanssa",Sortnum);
