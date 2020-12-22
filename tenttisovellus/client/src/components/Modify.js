@@ -2,32 +2,120 @@ import React, { useState } from 'react';
 import '../App.css';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import axios from 'axios';
+import { TextField } from '@material-ui/core';
+
 
 
 function ChangeTests(props) {
 
   const [aktiivinenTentti, setAktiivinenTentti] = useState(0)
 
-  const vaihdaTentti = (index) => {
-    setAktiivinenTentti(index)
+  const vaihdaTentti = (tentti_id) => {
+    setAktiivinenTentti(tentti_id)
+  }
+// axios post
+ const userData ={
+    vastaus_nimi: '',
+    oikea_vastaus: false
+}
+
+const uusiVaihtoehto = async(e,kysymys_id,kysymysindex,aktiivinenTentti)=>{
+  e.preventDefault()
+  let uusivaihtoehto = userData
+  console.log("Uusivaihtoehto",uusivaihtoehto)
+    await axios.post("http://localhost:3005/vastausvaihtoehdot",{vastaus_nimi:uusivaihtoehto.vastaus_nimi,
+    oikea_vastaus: uusivaihtoehto.oikea_vastaus,kysymys_id:kysymys_id.toString()})
+    props.dispatch({ type: "LISAA_VASTAUS", data: { newAnswer: uusivaihtoehto, tenttiindex: [aktiivinenTentti], kysymysindex: kysymysindex } })
   }
 
-  console.log(props.data)
+  // axios put
+  const kysymysMuuttui = async (e,kysymys_id,kysymysindex,aktiivinenTentti) => {
+    let uusikysymys = e.target.value
+    await axios.put("http://localhost:3005/kysymykset",{kysymys_nimi:e.target.value, kysymys_id: kysymys_id.toString()})
+    props.dispatch({ type: "KYSYMYS_MUUTTUI", data: { newQuestion: uusikysymys, tenttiindex: aktiivinenTentti, kysymysindex:kysymysindex } })
+  }
+  const vastausVaihtoehtoMuuttui = async (e,vaihtoehto_id,kysymysindex,aktiivinenTentti,vaihtoehtoindex) => {
+    let uusivaihtoehto = e.target.value
+    await axios.put("http://localhost:3005/vastausvaihtoehdot",{vastaus_nimi:e.target.value, vaihtoehto_id: vaihtoehto_id.toString()})
+    props.dispatch({ type: "VASTAUS_MUUTTUI", data: { newAnswer: uusivaihtoehto, tenttiindex: [aktiivinenTentti], kysymysindex: kysymysindex, vaihtoehtoindex: vaihtoehtoindex } })
+  }
+  const oikeaVastausMuuttui = async (e,vaihtoehto_id,kysymysindex,aktiivinenTentti,vaihtoehtoindex) => {
+    let uusiOikeaVastaus = e.target.checked
+    await axios.put("http://localhost:3005/vastausvaihtoehdot/oikea",{vaihtoehto_id: vaihtoehto_id.toString(), oikea_vastaus:e.target.checked})
+    props.dispatch({ type: "OIKEA_VASTAUS", data: { newRightAnswer: uusiOikeaVastaus, tenttiindex: [aktiivinenTentti], kysymysindex: kysymysindex, vaihtoehtoindex: vaihtoehtoindex } })
+  }
+
+  // axios delete
+
+  const poistaVastaus= async (e,vaihtoehto_id,kysymys_id,kysymysindex,aktiivinenTentti,vaihtoehtoindex)=>{
+    await axios.delete("http://localhost:3005/vastausvaihtoehdot",{data: {kysymys_id:kysymys_id.toString(), vaihtoehto_id: vaihtoehto_id.toString()}})
+    props.dispatch({ type: "POISTA_VASTAUS", data: { tenttiindex: [aktiivinenTentti], kysymysindex: kysymysindex, vaihtoehtoindex: vaihtoehtoindex } })
+  }
+
   return <div>
     <h2>Tervetuloa admin</h2>
     <div className="main">
-      {props.data.map((tentti, index) => <button className="TenttiButton" key={index} onClick={() => vaihdaTentti(index)}>{tentti.tentti}</button>)}
+      {props.data.map((tentti, index) => <button className="TenttiButton" key={index} onClick={() => vaihdaTentti(index)}>{tentti.tentin_nimi}</button>)}
       <div className="askCards">
-        {props.data[aktiivinenTentti].kysymykset.map((item, index) => <div key={index} className="Card"><div className="Kysymys" ><span><input type="text" className="muokkaaKys" onChange={(e) => props.dispatch({ type: "KYSYMYS_MUUTTUI", data: { newQuestion: e.target.value, tenttiindex: [aktiivinenTentti], kysymysindex: index } })} value={item.kysymys} rows="1" ></input></span><span className="poisto" onClick={(e) => props.dispatch({ type: "POISTA_KYSYMYS", data: { tenttiindex: [aktiivinenTentti], kysymysindex: index} })}><DeleteIcon style={{ color: "grey", fontSize: 25, margin: "auto", verticalAlign: "middle" }}></DeleteIcon></span></div>
+        {props.data[aktiivinenTentti].kysymykset.map((item, kysymysindex) =>
+          <div key={kysymysindex}
+               className="Card">
+          <div className="Kysymys" ><span>
+              <TextField  type="text"
+                      className="muokkaaKys" 
+                      onBlur={(e) => kysymysMuuttui(e,item.kysymys_id,kysymysindex,aktiivinenTentti)}
+                      defaultValue={item.kysymys_nimi} 
+                      rows="1" />
+              
+              </span>
+              <span className="poisto" 
+                    onClick={(e) => props.dispatch({ type: "POISTA_KYSYMYS", data: { tenttiindex: [aktiivinenTentti], kysymysindex: kysymysindex } })}>
+              <DeleteIcon style={{ color: "grey", fontSize: 25, margin: "auto", verticalAlign: "middle" }}>
+              </DeleteIcon></span></div>
 
 
-          {item.vastaukset.map((alkio, vastausindex) =>
-            <div key={vastausindex}><label className="checkbox"><input type="checkbox" onChange={(e) => props.dispatch({ type: "OIKEA_VASTAUS", data: { newRightAnswer: e.target.checked, tenttiindex: [aktiivinenTentti], kysymysindex: index, vastausindex: vastausindex } })} checked={alkio.oikea} /><span><input type="text" className="muokkaaVas" onChange={(e) => props.dispatch({ type: "VASTAUS_MUUTTUI", data: { newAnswer: e.target.value, tenttiindex: [aktiivinenTentti], kysymysindex: index, vastausindex: vastausindex } })} value={alkio.vastaus} rows="1" ></input></span></label>
-              <span className="poisto" onClick={(e) => props.dispatch({ type: "POISTA_VASTAUS", data: { tenttiindex: [aktiivinenTentti], kysymysindex: index, vastausindex: vastausindex } })}><DeleteIcon style={{ color: "grey", fontSize: 28, verticalAlign: "middle" }}></DeleteIcon></span>
-            </div>)}
-          <div className="lisays" onClick={(e) => props.dispatch({ type: "LISAA_VASTAUS", data: { newQuestion: e.target.value, tenttiindex: [aktiivinenTentti], kysymysindex: index } })}><AddCircleIcon style={{ color: "grey", fontSize: 28, verticalAlign: "middle" }}></AddCircleIcon></div>
-        </div>)}
-        <div className="lisaaKys" onClick={(index) => props.dispatch({ type: "LISAA_KYSYMYS", data: { tenttiindex: [aktiivinenTentti], kysymysindex: index } })}><AddCircleIcon style={{ color: "grey", fontSize: 28, verticalAlign: "middle", textAlign: "center" }}></AddCircleIcon></div>
+            {item.vaihtoehdot.map((alkio, vaihtoehtoindex) =>
+              <div key={vaihtoehtoindex}><label className="checkbox">
+                <input type="checkbox"
+                       onChange={(e) => oikeaVastausMuuttui(e,alkio.vaihtoehto_id,alkio.kysymys_id,kysymysindex,aktiivinenTentti,vaihtoehtoindex)}
+                      checked={alkio.oikea_vastaus} />
+                      <span>
+                <input type="text" 
+                       className="muokkaaVas"
+                       onChange={(e) =>  vastausVaihtoehtoMuuttui(e,alkio.vaihtoehto_id,alkio.kysymys_id,kysymysindex,aktiivinenTentti,vaihtoehtoindex)} 
+                      value={alkio.vastaus_nimi} 
+                      rows="1" >
+                        </input>
+                        </span>
+                        </label>
+                <span className="poisto" 
+                      onClick={(e) =>  poistaVastaus(e,alkio.vaihtoehto_id,alkio.kysymys_id,kysymysindex,aktiivinenTentti,vaihtoehtoindex)}>
+                <DeleteIcon style=
+                            {{ color: "grey", 
+                                fontSize: 28, 
+                                verticalAlign: "middle" }}>
+                </DeleteIcon>
+                </span>
+              </div>)}
+            <div className="lisays"
+                 onClick={(e) => uusiVaihtoehto(e,item.kysymys_id,kysymysindex,aktiivinenTentti)}>
+              <AddCircleIcon style=
+                            {{color: "grey",
+                             fontSize: 28, 
+                             verticalAlign: "middle" }}>
+              </AddCircleIcon>
+            </div>
+          </div>)}
+        <div className="lisaaKys" 
+              onClick={(index) => props.dispatch({ type: "LISAA_KYSYMYS", data: { tenttiindex: [aktiivinenTentti], kysymysindex: index } })}>
+        <AddCircleIcon style=
+                      {{ color: "grey",
+                         fontSize: 28, 
+                         verticalAlign: "middle",
+                          textAlign: "center" }}>
+        </AddCircleIcon>
+        </div>
       </div>
     </div>
   </div>

@@ -1,5 +1,8 @@
 const express = require('express')
 const app = express()
+var jwt = require('jsonwebtoken');
+const SALT_ROUNDS = 5
+var bcrypt=require('bcrypt')
 const cors = require("cors")
 var bodyParser = require("body-parser")
 const db = require('./db')
@@ -69,14 +72,14 @@ app.get('/tentit', (req, res, next) => {
     res.send(result.rows)
   })
 })
-// app.post('/tentit', (req, res,next) => {
-//   db.query("INSERT INTO tentti_taulu (tentin_nimi, user_id) VALUES ('Testataan Nodea2', '1')", (err, result) => {
-//     if (err) {
-//       return next(err)
-//     }
-//     res.send('Lisäys onnistui')
-//   })
-//   })
+app.post('/tentit', (req, res,next) => {
+  db.query("INSERT INTO tentti_taulu (tentin_nimi, user_id) VALUES ($1,$2)", [req.body.tentin_nimi,req.body.user_id,], (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    res.send('Lisäys onnistui')
+  })
+  })
 app.delete('/tentit/:id', (req, res, next) => {
   db.query('DELETE FROM tentti_taulu WHERE tentti_id = $1', [req.params.id], (err, result) => {
     if (err) {
@@ -96,7 +99,7 @@ app.put('/tentit/:id', (req, res, next) => {
 
 //kysymystaulu
 app.get('/kysymykset', (req, res, next) => {
-  db.query('SELECT * FROM kysymykset ', (err, result) => {
+  db.query('SELECT * FROM kysymykset ', (err, result) => {//order by id
     if (err) {
       return next(err)
     }
@@ -112,7 +115,7 @@ app.get('/kysymykset/:tentti_id', (req, res, next) => {
   })
 })
 app.post('/kysymykset', (req, res, next) => {
-  db.query("INSERT INTO kysymykset (kysymys_nimi, tentti_id) VALUES ('Onko tämä postin testausta?', '4')", (err, result) => {
+  db.query("INSERT INTO kysymykset (kysymys_nimi, tentti_id) VALUES ($1,$2)",[req.body.kysymys_nimi,req.body.tentti_id,], (err, result) => {
     if (err) {
       return next(err)
     }
@@ -127,11 +130,14 @@ app.delete('/kysymykset/:id', (req, res, next) => {
     res.send('Poisto onnistui')
   })
 })
-app.put('/kysymykset/:id', (req, res, next) => {
-  db.query("UPDATE kysymykset SET kysymys_nimi='Onnistuuko muokkaus?',tentti_id= '4' WHERE kysymys_id = $1", [req.params.id], (err, result) => {
+app.put('/kysymykset', (req, res, next) => {
+  console.log(req.body)
+  db.query("UPDATE kysymykset SET kysymys_nimi=$1 WHERE kysymys_id = $2", [req.body.kysymys_nimi,req.body.kysymys_id], (err, result) => {
     if (err) {
+      console.log(err)
       return next(err)
     }
+    console.log("Jee")
     res.send('Päivitys onnistui')
   })
 })
@@ -140,7 +146,7 @@ app.put('/kysymykset/:id', (req, res, next) => {
 // vastausvaihtoehdot
 
 app.get('/vastausvaihtoehdot', (req, res, next) => {
-  db.query('SELECT * FROM vastaus_vaihtoehdot ', (err, result) => {
+  db.query('SELECT * FROM vastaus_vaihtoehdot ORDER BY vaihtoehto_id ', (err, result) => {
     if (err) {
       return next(err)
     }
@@ -149,7 +155,7 @@ app.get('/vastausvaihtoehdot', (req, res, next) => {
 })
 
 app.get('/vastausvaihtoehdot/:kysymys_id', (req, res, next) => {
-  db.query('SELECT * FROM vastaus_vaihtoehdot WHERE kysymys_id=$1 ', [req.params.kysymys_id], (err, result) => {
+  db.query('SELECT * FROM vastaus_vaihtoehdot WHERE kysymys_id=$1 ORDER BY vaihtoehto_id', [req.params.kysymys_id], (err, result) => {
     if (err) {
       return next(err)
     }
@@ -158,23 +164,37 @@ app.get('/vastausvaihtoehdot/:kysymys_id', (req, res, next) => {
 })
 
 app.post('/vastausvaihtoehdot', (req, res, next) => {
-  db.query("INSERT INTO vastaus_vaihtoehdot (vastaus_nimi,kysymys_id,oikea_vastaus) VALUES ('Ei toimi', '13', false)", (err, result) => {
+  const userData = {
+    vastaus_nimi: req.body.vastaus_nimi,
+   oikea_vastaus: req.body.oikea_vastaus
+  } 
+  console.log(userData)
+  db.query("INSERT INTO vastaus_vaihtoehdot (vastaus_nimi,kysymys_id,oikea_vastaus) VALUES ($1,$2,$3)",[userData.vastaus_nimi,req.body.kysymys_id,userData.oikea_vastaus], (err, result) => {
     if (err) {
       return next(err)
     }
-    res.send('Lisäys onnistui')
+    res.send('Vaihtoehdon lisäys onnistui')
   })
 })
-app.delete('/vastausvaihtoehdot/:id', (req, res, next) => {
-  db.query('DELETE FROM vastaus_vaihtoehdot WHERE vaihtoehto_id = $1', [req.params.id], (err, result) => {
+app.delete('/vastausvaihtoehdot', (req, res, next) => {
+  console.log(req.body)
+  db.query('DELETE FROM vastaus_vaihtoehdot WHERE vaihtoehto_id = $1', [req.body.vaihtoehto_id], (err, result) => {
     if (err) {
       return next(err)
     }
     res.send('Poisto onnistui')
   })
 })
-app.put('/vastausvaihtoehdot/:id', (req, res, next) => {
-  db.query("UPDATE vastaus_vaihtoehdot SET vastaus_nimi='Muokkaus onnistui2',kysymys_id= '12',oikea_vastaus=true WHERE vaihtoehto_id = $1", [req.params.id], (err, result) => {
+app.put('/vastausvaihtoehdot', (req, res, next) => {
+  db.query("UPDATE vastaus_vaihtoehdot SET vastaus_nimi=$1 WHERE vaihtoehto_id = $2",[req.body.vastaus_nimi, req.body.vaihtoehto_id], (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    res.send('Päivitys onnistui')
+  })
+})
+app.put('/vastausvaihtoehdot/oikea', (req, res, next) => {
+  db.query("UPDATE vastaus_vaihtoehdot SET oikea_vastaus=$1 WHERE vaihtoehto_id = $2",[req.body.oikea_vastaus, req.body.vaihtoehto_id], (err, result) => {
     if (err) {
       return next(err)
     }
@@ -239,6 +259,15 @@ app.put('/vastaukset/:id', (req, res, next) => {
   })
 })
 
+// Käyttäjän haku
+app.get('/users', (req, res, next) => {
+  db.query('SELECT * FROM users ', (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    res.send(result.rows)
+  })
+})
 
 // INNER JOINIT
 app.get('/tenttikysymykset', (req, res, next) => {
@@ -250,6 +279,47 @@ app.get('/tenttikysymykset', (req, res, next) => {
   })
 })
 
+// rekisteröinti
+app.post('/users', (req, res) => {
+  const today = new Date()
+
+  const userData = {
+    etunimi: req.body.etunimi,
+    sukunimi: req.body.sukunimi,
+    email: req.body.email,
+    salasana: req.body.salasana,
+    onko_opettaja: req.body.onko_opettaja
+  } 
+  // let invalid = (Object.values(userData).some(item => {
+  //   return item == undefined
+  // }))
+  // if (invalid) return res.json({ error: "Values missing" })  
+ 
+  console.log("Nyt rekisteröidytään", userData)
+  db.query('select * FROM users where email=$1', [userData.email], (err, result) => {
+    if (err) {
+      return res.json("Nyt on errori")
+    }
+    user = result.rows.length > 0 ? result.rows[0].email : null
+    if (user !== null) {
+      console.log('username already taken');
+      return res.json({ error: "User already exists!" })
+    } else {
+      bcrypt.hash(userData.salasana, SALT_ROUNDS,(err,hash)=>{
+      // bcrypt.hash(userData.password, SALT_ROUNDS).then(hashedPassword => {
+      //hashedPassword = userData.password
+      hashedPassword = hash
+        db.query('insert into users (etunimi,sukunimi,email,salasana,onko_opettaja) values ($1,$2,$3,$4,$5)', [userData.etunimi, userData.sukunimi, userData.email, hashedPassword, userData.onko_opettaja], (err, result) => {
+          if (err) {
+           throw "Error! Cant create user!"
+          }
+          console.log('user created');
+          res.json({ message: userData.email + ' registered' })
+        });
+        });
+      }
+  });
+})
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
