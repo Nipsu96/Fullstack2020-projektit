@@ -79,14 +79,7 @@ function ChangeTests(props) {
     <h2>Tervetuloa admin</h2>
     <div className="main">
       {props.data.map((tentti, index) => <button className="TenttiButton" key={index} onClick={() => vaihdaTentti(index)}>{tentti.tentin_nimi}</button>)}
-      <div {...getRootProps()}>
-        <input {...getInputProps()} />
-        {
-          isDragActive ?
-            <p>Drop the files here ...</p> :
-            <p>Drag 'n' drop some files here, or click to select files</p>
-        }
-      </div>
+      
       <div className="askCards">
         {props.data[aktiivinenTentti].kysymykset.map((item, kysymysindex) =>
           <div key={kysymysindex}
@@ -140,6 +133,14 @@ function ChangeTests(props) {
                 }}>
               </AddCircleIcon>
             </div>
+            <div {...getRootProps()}>
+        <input {...getInputProps()} />
+        {
+          isDragActive ?
+            <p>Drop the Image here ...</p> :
+            <p>Drag 'n' drop Image here, or click to select Image</p>
+        }
+      </div>
           </div>)}
         <div className="lisaaKys"
           onClick={(index) => props.dispatch({ type: "LISAA_KYSYMYS", data: { tenttiindex: [aktiivinenTentti], kysymysindex: index } })}>
