@@ -6,6 +6,7 @@ var bcrypt=require('bcrypt')
 const cors = require("cors")
 var bodyParser = require("body-parser")
 const db = require('./db')
+const fileUpload = require('express-fileupload')
 module.exports = app
 var port = process.env.PORT || 3005
 app.use(bodyParser.json())
@@ -14,6 +15,9 @@ app.use(cors({
   origin: 'http://localhost:3000',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }))
+app.use(fileUpload({
+  limits: { fileSize: 2 * 1024 * 1024 * 1024 },
+}));
 
 app.use('/paljonkelloon', function (req, res, next) {
   console.log('Kello on :', Date.now())
@@ -320,6 +324,29 @@ app.post('/users', (req, res) => {
       }
   });
 })
+
+app.post('/upload', function (req, res) {
+  /* if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send('No files were uploaded.');
+  } */
+  console.log("Req.Files",req.files)
+  if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).send('No files were uploaded.');
+  }
+
+  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+  let newFile = req.files.file;
+  let newName = req.files.file.name;
+  console.log(newName)
+  // let date = Date.now().toString();
+  let fileName = newName 
+  newFile.mv('./img/'+fileName, function (err) {
+      if (err) {
+          return res.status(500).send(err)
+      }
+  });
+  console.log("hereweare")
+});
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

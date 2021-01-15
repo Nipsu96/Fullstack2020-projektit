@@ -10,7 +10,7 @@ import Tentit from './components/Tests';
 import ChangeTests from './components/Modify';
 import Register from './components/Register';
 import axios from 'axios';
-
+import {FormattedMessage, FormattedHTMLMessage} from 'react-intl';
 
 function reducer(state, action) {
   let syvakopio = JSON.parse(JSON.stringify(state))
@@ -70,7 +70,7 @@ function reducer(state, action) {
 
 
 
-function App() {
+function App(props) {
 
   const [dataAlustettu, setDataAlustettu] = useState(false)
   const [state, dispatch] = useReducer(reducer, []);
@@ -139,11 +139,16 @@ function App() {
       <div className="App">
         <header className="App-header">
           <ul>
-            <li><Link to="/tests" className="active" >Tentit</Link></li>
-            <li><Link to="/about">Tietoa sovelluksesta</Link></li>
-            <li><Link to="/admin">Muokkaa/poista/lisää</Link></li>
-            <li><Link to="/register">Rekisteröidy</Link></li>
-            <li><Link to="/register">Kirjaudu sisään</Link></li>
+            <li><Link to="/tests" className="active" ><FormattedMessage id="tests"/></Link></li>
+            <li><Link to="/about"><FormattedMessage id="about"
+                      /></Link></li>
+            <li><Link to="/admin"><FormattedMessage id="modify"
+                      /></Link></li>
+            <li><Link to="/register"><FormattedMessage id="register"
+                      /></Link></li>
+            <li><Link to="/login"><FormattedMessage id="login"
+                    /></Link></li>
+            <li><FormattedMessage id="Language"/></li>
           </ul>
         </header>
         <Switch>

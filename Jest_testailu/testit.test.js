@@ -81,9 +81,9 @@ test('Funktio palauttaa nullin', () => {
   test('1 + 2 summa on 3', () => {
     expect(funktiot.sum(1, 2)).toBe(3);
   });
-  // test('2 + 1 0n 3 epäonnistuu', () => {
-  //   expect(funktiot.sum(2, 2)).toBe(3);
-  // });
+  test('2 + 1 0n 3 epäonnistuu', () => {
+    expect(funktiot.sum(2, 2)).toBe(3);
+  });
   
   test('Luku on suurempi tai yhtäsuuri kuin 3', () => {
     expect(funktiot.Luku(3)).toBeGreaterThanOrEqual(3);
@@ -101,9 +101,9 @@ test('Funktio palauttaa nullin', () => {
     expect(funktiot.Luku(5.49995)).toBeCloseTo(5.5);
   });
   
-  // test('Luku on pyöristetty lähelle 5.8 epäonnistuu', () => {
-  //   expect(funktiot.Luku(5.49995)).toBeCloseTo(5.8);
-  // });
+  test('Luku on pyöristetty lähelle 5.8 epäonnistuu', () => {
+    expect(funktiot.Luku(5.49995)).toBeCloseTo(5.8);
+  });
   
   test('paluuarvo false', () => {
     const tulos = funktiot.alleKymmenen(22);

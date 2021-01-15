@@ -23,6 +23,7 @@ ul {
 
 li {
   float: left;
+  color: white;
 }
 
 li a {
@@ -225,6 +226,10 @@ h2{
   text-transform: uppercase;
   border: 0;
   cursor: pointer;
+}
+
+.Language{
+  color:#FAFAFA
 }
 
 /* table, td, th {  
