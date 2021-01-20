@@ -10,7 +10,9 @@ import Tentit from './components/Tests';
 import ChangeTests from './components/Modify';
 import Register from './components/Register';
 import axios from 'axios';
-import {FormattedMessage, FormattedHTMLMessage} from 'react-intl';
+import { FormattedMessage } from 'react-intl';
+
+
 
 function reducer(state, action) {
   let syvakopio = JSON.parse(JSON.stringify(state))
@@ -19,7 +21,7 @@ function reducer(state, action) {
       syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].vaihtoehdot[action.data.vaihtoehtoindex].valittu = action.data.Answer;
       return syvakopio
     case 'OIKEA_VASTAUS':
-      syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].vaihtoehdot[action.data.vaihtoehtoindex].oikea_vastaus= action.data.newRightAnswer;
+      syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].vaihtoehdot[action.data.vaihtoehtoindex].oikea_vastaus = action.data.newRightAnswer;
       return syvakopio
     case 'VASTAUS_MUUTTUI':
       syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].vaihtoehdot[action.data.vaihtoehtoindex].vastaus_nimi = action.data.newAnswer
@@ -28,37 +30,33 @@ function reducer(state, action) {
       syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].kysymys_nimi = action.data.newQuestion;
       return syvakopio
     case 'LISAA_KYSYMYS':
+      console.log("ollaan lisää kysymys:", action.data.newQuestion)
       let lisaakysymys = syvakopio[action.data.tenttiindex].kysymykset
-      let uusikysymys = {
-        kysymys: "",
-        vastaukset: [
-          {
-            vastaus: "", valittu: false, oikea: false
-          }
-        ]
-      }
+      let uusikysymys = action.data.newQuestion
       lisaakysymys.push(uusikysymys)
       syvakopio[action.data.tenttiindex].kysymykset = lisaakysymys
       return syvakopio
     case 'LISAA_VASTAUS':
-      console.log("ollaan lisää vastaus:",action.data.newAnswer)
+      console.log("ollaan lisää vastaus:", action.data.newAnswer)
       let lisaavastaus = syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].vaihtoehdot
       let uusivastaus = action.data.newAnswer
       lisaavastaus.push(uusivastaus)
       syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].vaihtoehdot = lisaavastaus
       return syvakopio
     case 'POISTA_VASTAUS':
-      console.log("Ollaan poista vastaus:",action.data.vaihtoehtoindex)
+      console.log("Ollaan poista vastaus:", action.data.vaihtoehtoindex)
       let poistavastaus = syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].vaihtoehdot
-      console.log("Splice ei tehty:",syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].vaihtoehdot)
+      console.log("Splice ei tehty:", syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].vaihtoehdot)
       poistavastaus.splice([action.data.vaihtoehtoindex], 1)
-      console.log("Splice tehty:",poistavastaus)
+      console.log("Splice tehty:", poistavastaus)
       syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].vaihtoehdot = poistavastaus
       return syvakopio
 
     case 'POISTA_KYSYMYS':
       let poistakysymys = syvakopio[action.data.tenttiindex].kysymykset
+      console.log("Splice ei tehty:", syvakopio[action.data.tenttiindex].kysymykset)
       poistakysymys.splice([action.data.kysymysindex], 1)
+      console.log("Splice tehty:", poistakysymys)
       syvakopio[action.data.tenttiindex].kysymykset = poistakysymys
       return syvakopio
     case 'INIT_DATA':
@@ -139,16 +137,16 @@ function App(props) {
       <div className="App">
         <header className="App-header">
           <ul>
-            <li><Link to="/tests" className="active" ><FormattedMessage id="tests"/></Link></li>
+            <li><Link to="/tests" className="active" ><FormattedMessage id="tests" /></Link></li>
             <li><Link to="/about"><FormattedMessage id="about"
-                      /></Link></li>
+            /></Link></li>
             <li><Link to="/admin"><FormattedMessage id="modify"
-                      /></Link></li>
+            /></Link></li>
             <li><Link to="/register"><FormattedMessage id="register"
-                      /></Link></li>
+            /></Link></li>
             <li><Link to="/login"><FormattedMessage id="login"
-                    /></Link></li>
-            <li><FormattedMessage id="Language"/></li>
+            /></Link></li>
+            <li><FormattedMessage id="Language" /></li>
           </ul>
         </header>
         <Switch>

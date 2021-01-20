@@ -2,12 +2,19 @@ const express = require('express')
 const app = express()
 var jwt = require('jsonwebtoken');
 const SALT_ROUNDS = 5
-var bcrypt=require('bcrypt')
+var bcrypt = require('bcrypt')
 const cors = require("cors")
 var bodyParser = require("body-parser")
 const db = require('./db')
 const fileUpload = require('express-fileupload')
 module.exports = app
+const httpServer = require('http').createServer()
+const io = require('socket.io')(httpServer, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+})
 var port = process.env.PORT || 3005
 app.use(bodyParser.json())
 //https://expressjs.com/en/resources/middleware/cors.html
@@ -18,19 +25,35 @@ app.use(cors({
 app.use(fileUpload({
   limits: { fileSize: 2 * 1024 * 1024 * 1024 },
 }));
+app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io')) //static socket.io
 
 app.use('/paljonkelloon', function (req, res, next) {
   console.log('Kello on :', Date.now())
   next()
 })
 
+httpServer.listen(9000)
 
+// var io = require('socket.io')(5432);
+var pg = require('pg');
 
+var con_string = 'tcp://postgres:Fullstack2020_NikoL@localhost:5432/TenttiKanta';
 
-// notice here I'm requiring my database adapter file
-// and not requiring node-postgres directly
+var pg_client = new pg.Client(con_string);
+pg_client.connect();
+var query = pg_client.query('LISTEN kysymys_nimi');
+pg_client.on('notification', async (data) => {
+})
 
+io.on('connection', function (socket) {
+  socket.emit('connected', { connected: true });
 
+  socket.on('ready for data', function (data) {
+    pg_client.on('notification', function (kysymys_nimi) {
+      socket.emit('update', { message: kysymys_nimi })
+    });
+  });
+});
 // app.get('/tentit/:id', (req, res, next) => {
 
 //   db.query('SELECT * FROM tentti_taulu WHERE tentti_id = $1', [req.params.id], (err, result) => {
@@ -76,14 +99,14 @@ app.get('/tentit', (req, res, next) => {
     res.send(result.rows)
   })
 })
-app.post('/tentit', (req, res,next) => {
-  db.query("INSERT INTO tentti_taulu (tentin_nimi, user_id) VALUES ($1,$2)", [req.body.tentin_nimi,req.body.user_id,], (err, result) => {
+app.post('/tentit', (req, res, next) => {
+  db.query("INSERT INTO tentti_taulu (tentin_nimi, user_id) VALUES ($1,$2)", [req.body.tentin_nimi, req.body.user_id,], (err, result) => {
     if (err) {
       return next(err)
     }
     res.send('Lisäys onnistui')
   })
-  })
+})
 app.delete('/tentit/:id', (req, res, next) => {
   db.query('DELETE FROM tentti_taulu WHERE tentti_id = $1', [req.params.id], (err, result) => {
     if (err) {
@@ -103,15 +126,16 @@ app.put('/tentit/:id', (req, res, next) => {
 
 //kysymystaulu
 app.get('/kysymykset', (req, res, next) => {
-  db.query('SELECT * FROM kysymykset ', (err, result) => {//order by id
+  db.query('SELECT * FROM kysymykset ORDER BY kysymys_id ', (err, result) => {//order by id
     if (err) {
       return next(err)
     }
     res.send(result.rows)
   })
 })
+
 app.get('/kysymykset/:tentti_id', (req, res, next) => {
-  db.query('SELECT * FROM kysymykset WHERE tentti_id=$1 ', [req.params.tentti_id], (err, result) => {
+  db.query('SELECT * FROM kysymykset WHERE tentti_id=$1 ORDER BY kysymys_id ', [req.params.tentti_id], (err, result) => {
     if (err) {
       return next(err)
     }
@@ -119,29 +143,32 @@ app.get('/kysymykset/:tentti_id', (req, res, next) => {
   })
 })
 app.post('/kysymykset', (req, res, next) => {
-  db.query("INSERT INTO kysymykset (kysymys_nimi, tentti_id) VALUES ($1,$2)",[req.body.kysymys_nimi,req.body.tentti_id,], (err, result) => {
+  const QuestionData = {
+    kysymys_nimi: req.body.kysymys_nimi,
+  }
+  db.query("INSERT INTO kysymykset (kysymys_nimi, tentti_id) VALUES ($1,$2)", [QuestionData.kysymys_nimi, req.body.tentti_id,], (err, result) => {
     if (err) {
       return next(err)
     }
     res.send('Lisäys onnistui')
   })
 })
-app.delete('/kysymykset/:id', (req, res, next) => {
-  db.query('DELETE FROM kysymykset WHERE kysymys_id = $1', [req.params.id], (err, result) => {
+app.delete('/kysymykset', (req, res, next) => {
+  db.query('DELETE FROM kysymykset WHERE kysymys_id = $1', [req.body.kysymys_id], (err, result) => {
     if (err) {
       return next(err)
     }
+    console.log("Poisto onnistui")
     res.send('Poisto onnistui')
   })
 })
 app.put('/kysymykset', (req, res, next) => {
-  console.log(req.body)
-  db.query("UPDATE kysymykset SET kysymys_nimi=$1 WHERE kysymys_id = $2", [req.body.kysymys_nimi,req.body.kysymys_id], (err, result) => {
+  db.query("UPDATE kysymykset SET kysymys_nimi=$1 WHERE kysymys_id = $2", [req.body.kysymys_nimi, req.body.kysymys_id], (err, result) => {
     if (err) {
       console.log(err)
       return next(err)
     }
-    console.log("Jee")
+    console.log("Muokkaus onnistui")
     res.send('Päivitys onnistui')
   })
 })
@@ -170,10 +197,10 @@ app.get('/vastausvaihtoehdot/:kysymys_id', (req, res, next) => {
 app.post('/vastausvaihtoehdot', (req, res, next) => {
   const userData = {
     vastaus_nimi: req.body.vastaus_nimi,
-   oikea_vastaus: req.body.oikea_vastaus
-  } 
+    oikea_vastaus: req.body.oikea_vastaus
+  }
   console.log(userData)
-  db.query("INSERT INTO vastaus_vaihtoehdot (vastaus_nimi,kysymys_id,oikea_vastaus) VALUES ($1,$2,$3)",[userData.vastaus_nimi,req.body.kysymys_id,userData.oikea_vastaus], (err, result) => {
+  db.query("INSERT INTO vastaus_vaihtoehdot (vastaus_nimi,kysymys_id,oikea_vastaus) VALUES ($1,$2,$3)", [userData.vastaus_nimi, req.body.kysymys_id, userData.oikea_vastaus], (err, result) => {
     if (err) {
       return next(err)
     }
@@ -190,7 +217,7 @@ app.delete('/vastausvaihtoehdot', (req, res, next) => {
   })
 })
 app.put('/vastausvaihtoehdot', (req, res, next) => {
-  db.query("UPDATE vastaus_vaihtoehdot SET vastaus_nimi=$1 WHERE vaihtoehto_id = $2",[req.body.vastaus_nimi, req.body.vaihtoehto_id], (err, result) => {
+  db.query("UPDATE vastaus_vaihtoehdot SET vastaus_nimi=$1 WHERE vaihtoehto_id = $2", [req.body.vastaus_nimi, req.body.vaihtoehto_id], (err, result) => {
     if (err) {
       return next(err)
     }
@@ -198,7 +225,7 @@ app.put('/vastausvaihtoehdot', (req, res, next) => {
   })
 })
 app.put('/vastausvaihtoehdot/oikea', (req, res, next) => {
-  db.query("UPDATE vastaus_vaihtoehdot SET oikea_vastaus=$1 WHERE vaihtoehto_id = $2",[req.body.oikea_vastaus, req.body.vaihtoehto_id], (err, result) => {
+  db.query("UPDATE vastaus_vaihtoehdot SET oikea_vastaus=$1 WHERE vaihtoehto_id = $2", [req.body.oikea_vastaus, req.body.vaihtoehto_id], (err, result) => {
     if (err) {
       return next(err)
     }
@@ -293,12 +320,12 @@ app.post('/users', (req, res) => {
     email: req.body.email,
     salasana: req.body.salasana,
     onko_opettaja: req.body.onko_opettaja
-  } 
+  }
   // let invalid = (Object.values(userData).some(item => {
   //   return item == undefined
   // }))
   // if (invalid) return res.json({ error: "Values missing" })  
- 
+
   console.log("Nyt rekisteröidytään", userData)
   db.query('select * FROM users where email=$1', [userData.email], (err, result) => {
     if (err) {
@@ -309,19 +336,19 @@ app.post('/users', (req, res) => {
       console.log('username already taken');
       return res.json({ error: "User already exists!" })
     } else {
-      bcrypt.hash(userData.salasana, SALT_ROUNDS,(err,hash)=>{
-      // bcrypt.hash(userData.password, SALT_ROUNDS).then(hashedPassword => {
-      //hashedPassword = userData.password
-      hashedPassword = hash
+      bcrypt.hash(userData.salasana, SALT_ROUNDS, (err, hash) => {
+        // bcrypt.hash(userData.password, SALT_ROUNDS).then(hashedPassword => {
+        //hashedPassword = userData.password
+        hashedPassword = hash
         db.query('insert into users (etunimi,sukunimi,email,salasana,onko_opettaja) values ($1,$2,$3,$4,$5)', [userData.etunimi, userData.sukunimi, userData.email, hashedPassword, userData.onko_opettaja], (err, result) => {
           if (err) {
-           throw "Error! Cant create user!"
+            throw "Error! Cant create user!"
           }
           console.log('user created');
           res.json({ message: userData.email + ' registered' })
         });
-        });
-      }
+      });
+    }
   });
 })
 
@@ -329,9 +356,9 @@ app.post('/upload', function (req, res) {
   /* if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.');
   } */
-  console.log("Req.Files",req.files)
+  console.log("Req.Files", req.files)
   if (!req.files || Object.keys(req.files).length === 0) {
-      return res.status(400).send('No files were uploaded.');
+    return res.status(400).send('No files were uploaded.');
   }
 
   // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
@@ -339,11 +366,11 @@ app.post('/upload', function (req, res) {
   let newName = req.files.file.name;
   console.log(newName)
   // let date = Date.now().toString();
-  let fileName = newName 
-  newFile.mv('./img/'+fileName, function (err) {
-      if (err) {
-          return res.status(500).send(err)
-      }
+  let fileName = newName
+  newFile.mv('./img/' + fileName, function (err) {
+    if (err) {
+      return res.status(500).send(err)
+    }
   });
   console.log("hereweare")
 });

@@ -5,24 +5,24 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import axios from 'axios';
 import { TextField } from '@material-ui/core';
 import { useDropzone } from 'react-dropzone'
- const request = require('superagent');
- 
+const request = require('superagent');
+
 
 function ChangeTests(props) {
 
   const onDrop = useCallback(files => {
-   
+
     console.log("Tämä on file:", files);
-    
+
     const req = request.post('http://localhost:3005/upload');
     console.log(" Tämä on Req", req)
 
     files.forEach(file => {
       req.attach('file', file);
-      
+
     });
     req.end((err, res) => {
-      console.log("Tämä on res",res)
+      console.log("Tämä on res", res)
     })
 
   }, [])
@@ -35,6 +35,22 @@ function ChangeTests(props) {
     setAktiivinenTentti(tentti_id)
   }
   // axios post
+
+  const kysymysData = {
+    kysymys_nimi: ''
+  }
+
+  const uusiKysymys = async (e, tentti_id, aktiivinenTentti) => {
+    e.preventDefault()
+    let uusikysymys = kysymysData
+    console.log("Uusikysymys", uusikysymys)
+    await axios.post("http://localhost:3005/kysymykset", {
+      kysymys_nimi: uusikysymys.kysymys_nimi, tentti_id: tentti_id.toString()
+      //req.body.kysymys_nimi,req.body.tentti_id,
+    })
+    props.dispatch({ type: "LISAA_KYSYMYS", data: { newQuestion: uusikysymys, tenttiindex: [aktiivinenTentti] } })
+  }
+
   const userData = {
     vastaus_nimi: '',
     oikea_vastaus: false
@@ -74,12 +90,16 @@ function ChangeTests(props) {
     await axios.delete("http://localhost:3005/vastausvaihtoehdot", { data: { kysymys_id: kysymys_id.toString(), vaihtoehto_id: vaihtoehto_id.toString() } })
     props.dispatch({ type: "POISTA_VASTAUS", data: { tenttiindex: [aktiivinenTentti], kysymysindex: kysymysindex, vaihtoehtoindex: vaihtoehtoindex } })
   }
+  const poistaKysymys = async (e, kysymys_id, kysymysindex, aktiivinenTentti,) => {
+    await axios.delete("http://localhost:3005/kysymykset", { data: { kysymys_id: kysymys_id.toString() } })
+    props.dispatch({ type: "POISTA_KYSYMYS", data: { tenttiindex: [aktiivinenTentti], kysymysindex: kysymysindex } })
+  }
 
   return <div>
     <h2>Tervetuloa admin</h2>
     <div className="main">
       {props.data.map((tentti, index) => <button className="TenttiButton" key={index} onClick={() => vaihdaTentti(index)}>{tentti.tentin_nimi}</button>)}
-      
+
       <div className="askCards">
         {props.data[aktiivinenTentti].kysymykset.map((item, kysymysindex) =>
           <div key={kysymysindex}
@@ -93,7 +113,7 @@ function ChangeTests(props) {
 
             </span>
               <span className="poisto"
-                onClick={(e) => props.dispatch({ type: "POISTA_KYSYMYS", data: { tenttiindex: [aktiivinenTentti], kysymysindex: kysymysindex } })}>
+                onClick={(e) => poistaKysymys(e, item.kysymys_id, kysymysindex, aktiivinenTentti)}>
                 <DeleteIcon style={{ color: "grey", fontSize: 25, margin: "auto", verticalAlign: "middle" }}>
                 </DeleteIcon></span></div>
 
@@ -134,16 +154,16 @@ function ChangeTests(props) {
               </AddCircleIcon>
             </div>
             <div {...getRootProps()}>
-        <input {...getInputProps()} />
-        {
-          isDragActive ?
-            <p>Drop the Image here ...</p> :
-            <p>Drag 'n' drop Image here, or click to select Image</p>
-        }
-      </div>
+              <input {...getInputProps()} />
+              {
+                isDragActive ?
+                  <p>Drop the Image here ...</p> :
+                  <p>Drag 'n' drop Image here, or click to select Image</p>
+              }
+            </div>
           </div>)}
         <div className="lisaaKys"
-          onClick={(index) => props.dispatch({ type: "LISAA_KYSYMYS", data: { tenttiindex: [aktiivinenTentti], kysymysindex: index } })}>
+          onClick={(e) => uusiKysymys(e, props.data[aktiivinenTentti].tentti_id, aktiivinenTentti)}>
           <AddCircleIcon style=
             {{
               color: "grey",
