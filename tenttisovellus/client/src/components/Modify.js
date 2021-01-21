@@ -73,26 +73,27 @@ function ChangeTests(props) {
     await axios.put("http://localhost:3005/kysymykset", { kysymys_nimi: e.target.value, kysymys_id: kysymys_id.toString() })
     props.dispatch({ type: "KYSYMYS_MUUTTUI", data: { newQuestion: uusikysymys, tenttiindex: aktiivinenTentti, kysymysindex: kysymysindex } })
   }
+  //e, alkio.vaihtoehto_id, alkio.kysymys_id, kysymysindex, aktiivinenTentti, vaihtoehtoindex
   const vastausVaihtoehtoMuuttui = async (e, vaihtoehto_id, kysymysindex, aktiivinenTentti, vaihtoehtoindex) => {
     let uusivaihtoehto = e.target.value
     await axios.put("http://localhost:3005/vastausvaihtoehdot", { vastaus_nimi: e.target.value, vaihtoehto_id: vaihtoehto_id.toString() })
-    props.dispatch({ type: "VASTAUS_MUUTTUI", data: { newAnswer: uusivaihtoehto, tenttiindex: [aktiivinenTentti], kysymysindex: kysymysindex, vaihtoehtoindex: vaihtoehtoindex } })
+    props.dispatch({ type: "VASTAUS_MUUTTUI", data: { newAnswer: uusivaihtoehto, tenttiindex: aktiivinenTentti, kysymysindex: kysymysindex, vaihtoehtoindex: vaihtoehtoindex } })
   }
   const oikeaVastausMuuttui = async (e, vaihtoehto_id, kysymysindex, aktiivinenTentti, vaihtoehtoindex) => {
     let uusiOikeaVastaus = e.target.checked
     await axios.put("http://localhost:3005/vastausvaihtoehdot/oikea", { vaihtoehto_id: vaihtoehto_id.toString(), oikea_vastaus: e.target.checked })
-    props.dispatch({ type: "OIKEA_VASTAUS", data: { newRightAnswer: uusiOikeaVastaus, tenttiindex: [aktiivinenTentti], kysymysindex: kysymysindex, vaihtoehtoindex: vaihtoehtoindex } })
+    props.dispatch({ type: "OIKEA_VASTAUS", data: { newRightAnswer: uusiOikeaVastaus, tenttiindex: aktiivinenTentti, kysymysindex: kysymysindex, vaihtoehtoindex: vaihtoehtoindex } })
   }
 
   // axios delete
 
   const poistaVastaus = async (e, vaihtoehto_id, kysymys_id, kysymysindex, aktiivinenTentti, vaihtoehtoindex) => {
     await axios.delete("http://localhost:3005/vastausvaihtoehdot", { data: { kysymys_id: kysymys_id.toString(), vaihtoehto_id: vaihtoehto_id.toString() } })
-    props.dispatch({ type: "POISTA_VASTAUS", data: { tenttiindex: [aktiivinenTentti], kysymysindex: kysymysindex, vaihtoehtoindex: vaihtoehtoindex } })
+    props.dispatch({ type: "POISTA_VASTAUS", data: { tenttiindex: aktiivinenTentti, kysymysindex: kysymysindex, vaihtoehtoindex: vaihtoehtoindex } })
   }
   const poistaKysymys = async (e, kysymys_id, kysymysindex, aktiivinenTentti,) => {
     await axios.delete("http://localhost:3005/kysymykset", { data: { kysymys_id: kysymys_id.toString() } })
-    props.dispatch({ type: "POISTA_KYSYMYS", data: { tenttiindex: [aktiivinenTentti], kysymysindex: kysymysindex } })
+    props.dispatch({ type: "POISTA_KYSYMYS", data: { tenttiindex: aktiivinenTentti, kysymysindex: kysymysindex } })
   }
 
   return <div>
@@ -121,12 +122,12 @@ function ChangeTests(props) {
             {item.vaihtoehdot.map((alkio, vaihtoehtoindex) =>
               <div key={vaihtoehtoindex}><label className="checkbox">
                 <input type="checkbox"
-                  onChange={(e) => oikeaVastausMuuttui(e, alkio.vaihtoehto_id, alkio.kysymys_id, kysymysindex, aktiivinenTentti, vaihtoehtoindex)}
+                  onChange={(e) => oikeaVastausMuuttui(e, alkio.vaihtoehto_id, kysymysindex, aktiivinenTentti, vaihtoehtoindex)}
                   checked={alkio.oikea_vastaus} />
                 <span>
                   <input type="text"
                     className="muokkaaVas"
-                    onChange={(e) => vastausVaihtoehtoMuuttui(e, alkio.vaihtoehto_id, alkio.kysymys_id, kysymysindex, aktiivinenTentti, vaihtoehtoindex)}
+                    onChange={(e) => vastausVaihtoehtoMuuttui(e, alkio.vaihtoehto_id, kysymysindex, aktiivinenTentti, vaihtoehtoindex)}
                     value={alkio.vastaus_nimi}
                     rows="1" >
                   </input>

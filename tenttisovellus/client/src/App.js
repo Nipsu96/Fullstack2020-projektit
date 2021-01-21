@@ -24,6 +24,7 @@ function reducer(state, action) {
       syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].vaihtoehdot[action.data.vaihtoehtoindex].oikea_vastaus = action.data.newRightAnswer;
       return syvakopio
     case 'VASTAUS_MUUTTUI':
+      console.log("Ollaan vastaus muuttui",action.data.newAnswer )
       syvakopio[action.data.tenttiindex].kysymykset[action.data.kysymysindex].vaihtoehdot[action.data.vaihtoehtoindex].vastaus_nimi = action.data.newAnswer
       return syvakopio
     case 'KYSYMYS_MUUTTUI':

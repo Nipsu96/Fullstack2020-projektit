@@ -40,6 +40,7 @@
     });
     socket.on('update', function (data) {
       console.log("Tietokanta päivitetty! Kysymys muokattu:",data.message.payload);
+      window.alert("Kysymys päivitetty tietokantaan!")
     });
   </script>
     <!--
