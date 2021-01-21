@@ -42,6 +42,7 @@ var con_string = 'tcp://postgres:Fullstack2020_NikoL@localhost:5432/TenttiKanta'
 var pg_client = new pg.Client(con_string);
 pg_client.connect();
 var query = pg_client.query('LISTEN kysymys_nimi');
+var query1 = pg_client.query('LISTEN vastaus_nimi');
 pg_client.on('notification', async (data) => {
 })
 
@@ -49,8 +50,8 @@ io.on('connection', function (socket) {
   socket.emit('connected', { connected: true });
 
   socket.on('ready for data', function (data) {
-    pg_client.on('notification', function (kysymys_nimi) {
-      socket.emit('update', { message: kysymys_nimi })
+    pg_client.on('notification', function (title) {
+      socket.emit('update', { message: title })
     });
   });
 });

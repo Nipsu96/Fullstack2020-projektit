@@ -39,8 +39,8 @@
       socket.emit('ready for data', {});
     });
     socket.on('update', function (data) {
-      console.log("Tietokanta päivitetty! Kysymys muokattu:",data.message.payload);
-      window.alert("Kysymys päivitetty tietokantaan!")
+      console.log("Tietokanta päivitetty!",data.message.payload);
+      window.alert("Tietokantaa muokattu!")
     });
   </script>
     <!--

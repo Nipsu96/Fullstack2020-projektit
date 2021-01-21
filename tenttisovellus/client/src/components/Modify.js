@@ -115,7 +115,7 @@ function ChangeTests(props) {
             </span>
               <span className="poisto"
                 onClick={(e) => poistaKysymys(e, item.kysymys_id, kysymysindex, aktiivinenTentti)}>
-                <DeleteIcon style={{ color: "grey", fontSize: 25, margin: "auto", verticalAlign: "middle" }}>
+                <DeleteIcon style={{ color: "grey", fontSize: 27, margin: "auto", verticalAlign: "middle" }}>
                 </DeleteIcon></span></div>
 
 
@@ -125,24 +125,24 @@ function ChangeTests(props) {
                   onChange={(e) => oikeaVastausMuuttui(e, alkio.vaihtoehto_id, kysymysindex, aktiivinenTentti, vaihtoehtoindex)}
                   checked={alkio.oikea_vastaus} />
                 <span>
-                  <input type="text"
+                  <TextField type="text"
                     className="muokkaaVas"
-                    onChange={(e) => vastausVaihtoehtoMuuttui(e, alkio.vaihtoehto_id, kysymysindex, aktiivinenTentti, vaihtoehtoindex)}
-                    value={alkio.vastaus_nimi}
-                    rows="1" >
-                  </input>
+                    onBlur={(e) => vastausVaihtoehtoMuuttui(e, alkio.vaihtoehto_id, kysymysindex, aktiivinenTentti, vaihtoehtoindex)}
+                    defaultValue={alkio.vastaus_nimi}
+                    rows="1" />
                 </span>
-              </label>
                 <span className="poisto"
                   onClick={(e) => poistaVastaus(e, alkio.vaihtoehto_id, alkio.kysymys_id, kysymysindex, aktiivinenTentti, vaihtoehtoindex)}>
                   <DeleteIcon style=
                     {{
                       color: "grey",
-                      fontSize: 28,
+                      fontSize: 29,
                       verticalAlign: "middle"
                     }}>
                   </DeleteIcon>
                 </span>
+              </label>
+                
               </div>)}
             <div className="lisays"
               onClick={(e) => uusiVaihtoehto(e, item.kysymys_id, kysymysindex, aktiivinenTentti)}>

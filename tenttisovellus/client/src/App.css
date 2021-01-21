@@ -45,9 +45,11 @@ text-align: left;
 
 .Card{ 
   background-color: #FFFFFF;
-  border-radius: 6px;
-  padding: 13px;
-  box-shadow: 1px 2px 3px #888888;
+    border-radius: 10px;
+    padding: 13px;
+    padding-top: 16px;
+    box-shadow: 1px 2px 3px #888888;
+    border: 1px solid rgb(207, 207, 207);
 }
 
 .Kysymys{
@@ -58,20 +60,21 @@ text-align: left;
     display: inline-flex;
     cursor: pointer;
     position: relative;
+    margin-top: 5px;
 }
 .checkboxRightAns {
   margin-left:3em;
 }
 
 .checkbox > span,.checkboxRightAns > span {
-    padding: 0.5rem 0.25rem;
+  padding: 0.8rem 0.25em;
 }
 .checkbox > textarea{
   padding: 0.5rem 0.25rem;
 }
 
 .checkbox > input,.checkboxRightAns > input {
-  margin-top: 10px;
+  margin-top: 16px;
   height: 20px;
   width: 20px;
     -webkit-appearance: none;
@@ -102,7 +105,7 @@ text-align: left;
     color: #ffffff;
     position: absolute;
     left: 0.5rem;
-    top: 0.6rem;
+    top: 0.98rem;
 }
 
 
@@ -174,7 +177,6 @@ text-align: left;
 
 .poisto{
   padding-left:3%;
-  padding-top:9px;
 }
 
 .lisaaKys{
@@ -231,6 +233,8 @@ h2{
 .Language{
   color:#FAFAFA
 }
+
+
 
 /* table, td, th {  
   border: 1px solid #ddd;
